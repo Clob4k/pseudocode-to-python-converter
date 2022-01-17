@@ -28,47 +28,47 @@ Constant will be regarded as a variable.
 
 **assignment:** 
 
-<variableA> <- <variableB> 
+{variableA} ← {variableB} 
 
 **arrays:**
 
-one-dimensional: DECLARE <identifer> : ARRAY[<lower>,<upper>] OF <data type>
+one-dimensional: DECLARE {identifer} : ARRAY[{lower},{upper}] OF {data type}
 
-two-dimensional: DECLARE <identifer> : ARRAY[<lower1>:<upper1>,<lower2>:<upper2>] OF <data type>
+two-dimensional: DECLARE {identifer} : ARRAY[{lower1}:{upper1},{lower2}:{upper2}] OF {data type}
 
-fetch values:    <identifer>[index]
+fetch values:    {identifer}[index]
 
 **common operations**
 
-INPUT<identifer>
+INPUT{identifer}
 
-OUTPUT<value(s)>
+OUTPUT{value(s)}
 
-+   Addition
+"+"   Addition
 
--   Subtraction
+"-"   Subtraction
 
-*   Multiplication
+"*"   Multiplication
 
-/   Division
+"/"   Division
 
->   Greater than
+"}"   Greater than
 
-<   Less than
+"{"   Less than
 
->=  Greater than or equal to
+"}="  Greater than or equal to
 
-<=  Less than or equal to
+"{="  Less than or equal to
 
-=   equal to
+"="   equal to
 
-<>  not equal to
+"<>"  not equal to
 
-<statement> AND <statement>
+{statement} AND {statement}
 
-<statement> OR <statement>
+{statement} OR {statement}
 
-NOT <statement>
+NOT {statement}
 
 RIGHT(ThisString: STRING, x:INTEGER)
 
@@ -84,80 +84,80 @@ UCASE(ThisChar: CHAR)
 
 **selection**
 
-IF <condition>
+IF {condition}
     THEN
-        <statement(s)>
+        {statement(s)}
 ENDIF
 
-IF <condition>
+IF {condition}
     THEN
-        <statement(s)>
+        {statement(s)}
     ELSE
-        <statement(s)>
+        {statement(s)}
 ENDIF
 
-CASE OF <identifer>
-    <value1> : <statement1>
-               <statement2>
-    <value2> : <statement1>
-               <statement2>
-    OTHERWISE: <statement1>
-               <statement2>
+CASE OF {identifer}
+    {value1} : {statement1}
+               {statement2}
+    {value2} : {statement1}
+               {statement2}
+    OTHERWISE: {statement1}
+               {statement2}
 ENDCASE
 
 **iteration**
 
-FOR <indentifer> <- <value1> TO <value2>
-    <statements>
-NEXT <identifer>
+FOR {indentifer} {- {value1} TO {value2}
+    {statements}
+NEXT {identifer}
 
 REPEAT
-    <statement(s)>
-UNTIL <condition>
+    {statement(s)}
+UNTIL {condition}
 
-WHILE <condition>
-    <statement(s)>
+WHILE {condition}
+    {statement(s)}
 ENDWHILE
 
 **procedure and functions**
 
-PROCEDURE <identifer>
-    <statement(s)>
+PROCEDURE {identifer}
+    {statement(s)}
 ENDPROCEDURE
 
-PROCEDURE <identifer>(<para1>:<datatype>, <para2>:<datatype>)
-    <statement(s)>
+PROCEDURE {identifer}({para1}:{datatype}, {para2}:{datatype})
+    {statement(s)}
 ENDPROCEDURE
 
-CALL <identifer>
+CALL {identifer}
 
-CALL <identifer>(Value1, Value2)
+CALL {identifer}(Value1, Value2)
 
-FUNCTION <identifer> RETURNS <data type>
-    <statement(s)>
+FUNCTION {identifer} RETURNS {data type}
+    {statement(s)}
 ENDFUNCTION
 
-FUNCTION <identifer>(<para1>:<datatype>, <para2>:<datatype>) RETURNS <data type>
-    <statement(s)>
+FUNCTION {identifer}({para1}:{datatype}, {para2}:{datatype}) RETURNS {data type}
+    {statement(s)}
 ENDFUNCTION
 
-PROCEDURE <identifier>(BYREF <para1>:<datatype>, <para2>:<datatype>)
-    <statement(s)>
+PROCEDURE {identifier}(BYREF {para1}:{datatype}, {para2}:{datatype})
+    {statement(s)}
 ENDPROCEDURE
 
 **file handling**
 
-OPENFILE <File identifier> FOR <File mode>
+OPENFILE {File identifier} FOR {File mode}
 
-<File mode> : READ / WRITE / APPEND
+{File mode} : READ / WRITE / APPEND
 
-READFILE <File identifier>, <variable: STRING>
+READFILE {File identifier}, {variable: STRING}
 
-EOF(<File identifier>)
+EOF({File identifier})
 
-WRITEFILE <File identifier>, <data>
+WRITEFILE {File identifier}, {data}
 
-CLOSEFILE <File identifier>
+CLOSEFILE {File identifier}
 
 **user-defined data types**
 
