@@ -52,13 +52,13 @@ OUTPUT{value(s)}
 
 "/"   Division
 
-"}"   Greater than
+">"   Greater than
 
-"{"   Less than
+"<"   Less than
 
-"}="  Greater than or equal to
+">="  Greater than or equal to
 
-"{="  Less than or equal to
+"<="  Less than or equal to
 
 "="   equal to
 
@@ -107,9 +107,11 @@ ENDCASE
 
 **iteration**
 
-FOR {indentifer} {- {value1} TO {value2}
+`
+FOR {indentifer} ← {value1} TO {value2}
     {statements}
 NEXT {identifer}
+`
 
 REPEAT
     {statement(s)}
