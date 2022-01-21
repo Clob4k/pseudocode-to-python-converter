@@ -107,11 +107,9 @@ ENDCASE
 
 **iteration**
 
-`
 FOR {indentifer} ← {value1} TO {value2}
     {statements}
 NEXT {identifer}
-`
 
 REPEAT
     {statement(s)}
