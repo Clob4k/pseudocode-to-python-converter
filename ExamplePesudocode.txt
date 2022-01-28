@@ -1,0 +1,25 @@
+// ExamplePesudocode.txt
+// D:\OneDrive\Code\GithubProjects\pesudocode-to-python-converter\ExamplePesudocode.txt
+
+DECLARE Number, Result: INTEGER
+DECLARE myArray : ARRAY [1:50] OF BOOLEAN
+
+FOR Index ← 1 TO 50
+    myArray[Index] ← FALSE
+NEXT Index
+
+IF Num2 <> 0
+  THEN
+    OUTPUT "test1"
+ELSE
+    IF Num2 <= 0
+      THEN
+        OUTPUT "test3"
+    ENDIF
+    OUTPUT "test2"
+ENDIF
+
+Number ← 5
+Result ← Number - 2
+
+OUTPUT Result, Number
