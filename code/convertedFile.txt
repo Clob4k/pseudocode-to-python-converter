@@ -1,0 +1,21 @@
+# ExampleCode.txt
+# D:\OneDrive\Code\GithubProjects\ExampleCode.txt
+
+#DECLARE Number, Result: INTEGER
+myArray = []
+
+for Index in range(1,50):
+    myArray[Index] = False
+
+if Num2 != 0:
+    print("test1")
+else:
+    if Num2 <= 0:
+        print("test3")
+    print("test2")
+
+Number = 5
+Result = Number - 2
+
+print(Result, Number)
+
