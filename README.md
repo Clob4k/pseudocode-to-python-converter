@@ -1,164 +1,234 @@
-# pesudocode-to-python-converter
-Individual project by Luke.Tang
+# Pesudocode-to-python-converter
 
-Started on Jan 16th 2022
+* Individual project by _Luke.Tang_
 
-The program is designed to convert pesudocode in text file into python code.
+* Started on _Jan 16th 2022_
 
-version: python 3.9.6
+* The program is designed to convert pesudocode in text file into python code.
 
-# accepted pesudocode format
-All Syntax follows the Cambridge International AS & A Level Computer Science 9618 - Pesudocode Guide for Teachers
+* Develop environment: _python 3.10.2_
 
-Command words implemented should be in UPPER case.
+# Accepted pesudocode format
 
-Indentations should be made where necessary.
+* All Syntax follow the Cambridge International AS & A Level Computer Science 9618 - Pesudocode Guide for Teachers.
 
-Comments are preceded by //.
+* Command words implemented should be in UPPER case.
 
-**data types**
+* Indentations should be made where necessary.
 
-The program accepts INTEGER, REAL, CHAR, STRING, BOOLEAN as data types.
+* Comments are preceded by ``//``.
 
-The converted file follows original identifiers.
+## Data types
 
-Variable declaration will not be converted since it does not exists in python.
+* The program accepts ``INTEGER, REAL, CHAR, STRING, BOOLEAN`` as data types.
 
-Constant will be regarded as a variable.
+* The converted file follows original identifiers.
 
-**assignment:** 
+* Variable declaration will not be converted since it does not exists in python.
 
-{variableA} ← {variableB} 
+* Constant will be regarded as a variable.
 
-**arrays:**
+## Assignment : 
 
-one-dimensional: DECLARE {identifer} : ARRAY[{lower},{upper}] OF {data type}
+* Pay attention that symbol for assignment is ``←`` instead of ``<-`` .
 
-two-dimensional: DECLARE {identifer} : ARRAY[{lower1}:{upper1},{lower2}:{upper2}] OF {data type}
+* Tips : You may use _ALT + 43081_ on the keybord to enter right-arrow symbol.
 
-fetch values:    {identifer}[index]
+```
+<variableA> ← <variableB> 
+```
 
-**common operations**
+## Arrays:
 
-INPUT{identifer}
+* one-dimensional : 
+```
+DECLARE <identifer> : ARRAY[<lower>,<upper>] OF <data type>
+```
 
-OUTPUT{value(s)}
+* two-dimensional : 
+```
+DECLARE <identifer> : ARRAY[<lower1>:<upper1>,<lower2>:<upper2>] OF <data type>
+```
 
-"+"   Addition
+* fetch values :    
+```
+<identifer>[index]
+```
 
-"-"   Subtraction
+## Common operations
 
-"*"   Multiplication
+* Symbols and operations :
 
-"/"   Division
+symbol | operation  
+:-------:|----------
+\+     | Addition
+\-     | Subtraction
+\*     | Multiplication
+/      | Division
+\>     | Greater than
+<      | Less than
+\>=    | Greater than or equal to
+<=     | Less than or equal to
+=      | Equal to
+<>     | Not equal to
+&      | Concatenate two strings
 
-">"   Greater than
+* Commands :
 
-"<"   Less than
+```
+INPUT<identifer>
+```
 
-">="  Greater than or equal to
+```
+OUTPUT<value(s)>
+```
 
-"<="  Less than or equal to
+```
+<statement> AND <statement>
+```
 
-"="   equal to
+```
+<statement> OR <statement>
+```
 
-"<>"  not equal to
+```
+NOT <statement>
+```
 
-{statement} AND {statement}
-
-{statement} OR {statement}
-
-NOT {statement}
-
+```
 RIGHT(ThisString: STRING, x:INTEGER)
+```
 
+```
 LENGTH(ThisString: STRING)
+```
 
+```
 MID(ThisString: STRING, x:INTEGER, y:INTEGER)
+```
 
+```
 LCASE(ThisChar: CHAR)
+```
 
+```
 UCASE(ThisChar: CHAR)
+```
 
-&   concatenate two strings
+## Selection
 
-**selection**
 
-IF {condition}
-    THEN
-        {statement(s)}
+```
+IF <condition>
+  THEN
+    <statement(s)>
 ENDIF
+```
 
-IF {condition}
-    THEN
-        {statement(s)}
-    ELSE
-        {statement(s)}
+```
+IF <condition>
+  THEN
+    <statement(s)>
+ELSE
+    <statement(s)>
 ENDIF
+```
 
-CASE OF {identifer}
-    {value1} : {statement1}
-               {statement2}
-    {value2} : {statement1}
-               {statement2}
-    OTHERWISE: {statement1}
-               {statement2}
+```
+CASE OF <identifer>
+    <value1> : <statement1>
+               <statement2>
+    <value2> : <statement1>
+               <statement2>
+    OTHERWISE: <statement1>
+               <statement2>
 ENDCASE
+```
 
-**iteration**
+## Iteration
 
-FOR {indentifer} ← {value1} TO {value2}
-    {statements}
-NEXT {identifer}
+```
+FOR <indentifer> ← <value1> TO <value2>
+    <statements>
+NEXT <identifer>
+```
 
+```
 REPEAT
-    {statement(s)}
-UNTIL {condition}
+    <statement(s)>
+UNTIL <condition>
+```
 
-WHILE {condition}
-    {statement(s)}
+```
+WHILE <condition>
+    <statement(s)>
 ENDWHILE
+```
 
-**procedure and functions**
+## Procedure and functions
 
-PROCEDURE {identifer}
-    {statement(s)}
+```
+PROCEDURE <identifer>
+    <statement(s)>
 ENDPROCEDURE
+```
 
-PROCEDURE {identifer}({para1}:{datatype}, {para2}:{datatype})
-    {statement(s)}
+```
+PROCEDURE <identifer>(<para1>:<datatype>, <para2>:<datatype>)
+    <statement(s)>
 ENDPROCEDURE
+```
 
-CALL {identifer}
+```
+CALL <identifer>
+```
 
-CALL {identifer}(Value1, Value2)
+```
+CALL <identifer>(Value1, Value2)
+```
 
-FUNCTION {identifer} RETURNS {data type}
-    {statement(s)}
+```
+FUNCTION <identifer> RETURNS <data type>
+    <statement(s)>
 ENDFUNCTION
+```
 
-FUNCTION {identifer}({para1}:{datatype}, {para2}:{datatype}) RETURNS {data type}
-    {statement(s)}
+```
+FUNCTION <identifer>(<para1>:<datatype>, <para2>:<datatype>) RETURNS <data type>
+    <statement(s)>
 ENDFUNCTION
+```
 
-PROCEDURE {identifier}(BYREF {para1}:{datatype}, {para2}:{datatype})
-    {statement(s)}
+```
+PROCEDURE <identifier>(BYREF <para1>:<datatype>, <para2>:<datatype>)
+    <statement(s)>
 ENDPROCEDURE
+```
 
-**file handling**
+## File handling
 
-OPENFILE {File identifier} FOR {File mode}
+```
+OPENFILE <File identifier> FOR <File mode>
 
-{File mode} : READ / WRITE / APPEND
+<File mode> : READ / WRITE / APPEND
+```
 
-READFILE {File identifier}, {variable: STRING}
+```
+READFILE <File identifier>, <variable: STRING>
+```
 
-EOF({File identifier})
+```
+EOF(<File identifier>)
+```
 
-WRITEFILE {File identifier}, {data}
+```
+WRITEFILE <File identifier>, <data>
+```
 
-CLOSEFILE {File identifier}
+```
+CLOSEFILE <File identifier>
+```
 
-**user-defined data types**
+## User-defined data types
 
-to be include 
+* To be include in future upgrades
