@@ -10,15 +10,21 @@
 
 # Contemporory limitations
 
+You may still obtain output files when operating the program in following situations with out errors. However, there is no guarantee to generate accurate python format files.
+
 * Pesudocode to be converted should not have **keywords** in variable names.
 
-* This program is **not** capable of handling:
+* Mutiline command without pre-definition is not accepted.
 
-1. Logical operations ``AND, OR, NOT`` within ``IF`` operation.
+* This program is **not** capable of handling pesudocode with :
 
-2. ``CASE, REPEAT UNTIL, PROCEDURE, FUNCTION, CALL, EOF`` operations.
+1. command words that are not mentioned in **Accepted pesudocode format** section.
 
-3. User-defined data types
+2. logical operations ``AND, OR, NOT`` within ``IF`` operation.
+
+3. ``CASE, REPEAT UNTIL, PROCEDURE, FUNCTION, CALL, EOF`` operations.
+
+4. **user-defined data types**
 
 # Accepted pesudocode format
 
@@ -26,7 +32,7 @@
 
 * Command words implemented should be in UPPER case.
 
-* Indentations should be made where necessary.
+* Indentations should be made where necessary and appropriate.
 
 * Comments are preceded by ``//``.
 
@@ -40,7 +46,7 @@
 
 * Constant will be regarded as a variable.
 
-## Assignment : 
+## Assignment
 
 * Pay attention that symbol for assignment is ``←`` instead of ``<-`` .
 
@@ -50,7 +56,7 @@
 <variableA> ← <variableB> 
 ```
 
-## Arrays:
+## Arrays
 
 * one-dimensional : 
 ```
