@@ -4,6 +4,9 @@
 import regex as re
 import os
 
+def sepLine():
+    print("-"*45)
+
 def getFile():
     filePath = inputFilePath()
     txtfile = readFile(filePath)
@@ -13,8 +16,10 @@ def getFile():
     return txtfile
 
 def inputFilePath():
+    sepLine()
     filePath = input("Key in the file path of the file to convert:\n")
     filePath = filePath.replace("\\", "/")
+    filePath = filePath.strip()
     return filePath
 
 def readFile(filePath):
@@ -22,7 +27,7 @@ def readFile(filePath):
         file = open(filePath, 'r', encoding='utf-8')
         txtfile = file.readlines()
         return txtfile
-    except FileNotFoundError:
+    except:
         print("Wrong file path or file name, consider retry.")
         return "notFound"
 
@@ -32,6 +37,7 @@ def convertFile(txtfile):
     return convFile
 
 def convKeyWords(txtfile):
+    sepLine()
     print("Convertion in process.")
     convFile = ""
     for line in txtfile:
@@ -39,47 +45,131 @@ def convKeyWords(txtfile):
         if line == "\n":
             nextLine = False
         else:
-            #indentation
+            # indentation count
             blanks = 0
             while line[blanks] == " ":
                 blanks = blanks + 4
             inden = int(blanks/4)
             line = line.strip()
-            #convert comments
-            line = line.replace('//','#')
-            if "NEXT" in line:
-                line = ""
-                inden = 0
-                nextLine = False
-            elif "THEN" in line:
-                line = ""
-                inden = 0
-                nextLine = False
-            elif "ENDIF" in line:
-                line = ""
-                inden = 0
-                nextLine = False
-            elif "ELSE" in line:
-                line = line.replace("ELSE","else:")
+
+            # line deletion
+            line,inden,nextLine = dirDel(line,inden,nextLine)
+            line = delLine(line)
+
+            # line convertion
+            if "LCASE" in line:
+                line = convLcase(line)
+            elif "UCASE" in line:
+                line = convUcase(line)
+            elif "RIGHT" in line:
+                line = convRight(line)
+            elif "MID" in line:
+                line = convMid(line)
             elif "OUTPUT" in line:
                 line = convOutput(line)
             elif "DECLARE" in line:
                 line = convDeclare(line)
+            elif "OPENFILE" in line:
+                line = convOpenFile(line)
+            elif "READFILE" in line:
+                line = convReadFile(line)
+            elif "WRITEFILE" in line:
+                line = convWriteFile(line)
+            elif "CLOSEFILE" in line:
+                line = convCloseFile(line)
             elif "FOR" in line:
                 line = convFor(line)
             elif "IF" in line:
                 line = convIF(line)
-            line = line.replace("NOT","not")
-            line = line.replace("OR","or")
-            line = line.replace("AND","and")
-            line = line.replace("TRUE","True")
-            line = line.replace("FALSE","False")
-            line = line.replace("←","=")
+
+            line = convReplace(line)
+            # indentation addition
             line = "    "*inden + line
+
         convFile = convFile + line
         if nextLine == True:
             convFile = convFile + "\n"
     return convFile
+
+def dirDel(line,inden,nextLine):
+    if "NEXT" in line:
+        line = ""
+        inden = 0
+        nextLine = False
+    elif "THEN" in line:
+        line = ""
+        inden = 0
+        nextLine = False
+    elif "ENDIF" in line:
+        line = ""
+        inden = 0
+        nextLine = False
+    elif "ENDWHILE" in line:
+        line = ""
+        inden = 0
+        nextLine = False
+    return (line,inden,nextLine)
+
+def delLine(line):
+    if "ELSE" in line:
+        line = line.replace("ELSE","else:")
+    elif "LENGTH" in line:
+        line = line.replace("LENGTH","len")
+    elif "WHILE" in line:
+        line = line.replace("WHILE","while")
+        line = line + ":"
+    return line
+
+def convReplace(line):
+    line = line.replace('//','#')
+    line = line.replace("NOT","not")
+    line = line.replace("OR","or")
+    line = line.replace("AND","and")
+    line = line.replace("TRUE","True")
+    line = line.replace("FALSE","False")
+    line = line.replace("←","=")
+    line = line.replace("&","+")
+    return line
+
+def convLcase(line):
+    # get variable name
+    varNameList = re.findall(r'LCASE\((.*?)\)',line)
+    varName = ""
+    varName = varName.join(varNameList)
+    varName = varName.strip()
+    thisLine = "{}.lower".format(varName)
+    return thisLine
+
+def convUcase(line):
+    varNameList = re.findall(r'UCASE\((.*?)\)',line)
+    varName = ""
+    varName = varName.join(varNameList)
+    varName = varName.strip()
+    thisLine = "{}.upper".format(varName)
+    return thisLine
+
+def convRight(line):
+    varNameList = re.findall(r'RIGHT\((.*?),',line)
+    varNumList = re.findall("\d+",line)
+    integer = varNumList[-1]
+    varName = ""
+    varName = varName.join(varNameList)
+    varName = varName.strip()
+    thisLine = "{}[0:{}]".format(varName,integer)
+    return thisLine
+
+def convMid(line):
+    varNameList = re.findall(r'\((.*?),',line)
+    varNumList = re.findall("\d+",line)
+    startVal = varNumList[-2]
+    lenVal = varNumList[-1]
+    startVal = str(eval(startVal)-1)
+    lenVal = str(eval(lenVal)+1)
+    varName = ""
+    varName = varName.join(varNameList)
+    varName = varName.strip()
+    thisLine = "{}[{}:{}]".format(varName,startVal,lenVal)
+    return thisLine
 
 def convOutput(line):
     thisLine = line
@@ -94,7 +184,6 @@ def convOutput(line):
 def convDeclare(line):
     thisLine = line
     if "ARRAY" in line:
-        #get variable name
         varNameList = re.findall(r'DECLARE(.*?):',line)
         varName = ""
         varName = varName.join(varNameList)
@@ -110,8 +199,8 @@ def convFor(line):
     varName = varName.join(varNameList)
     varName = varName.strip()
     varRangeList = re.findall("\d+",line)
-    ini = varRangeList[0]
-    end = varRangeList[1]
+    ini = varRangeList[-2]
+    end = varRangeList[-1]
     thisLine = "for {} in range({},{}):".format(varName, ini, end)
     return thisLine
 
@@ -129,9 +218,18 @@ def convIF(line):
         varValueList = re.findall(r'<>(.*?)\Z',line)
         symbol = "!="
     else:
-        varNameList = re.findall(r'IF(.*?)=',line)
-        varValueList = re.findall(r'=(.*?)\Z',line)
-        symbol = "=="
+        if "=" in line:
+            varNameList = re.findall(r'IF(.*?)=',line)
+            varValueList = re.findall(r'=(.*?)\Z',line)
+            symbol = "=="
+        elif ">" in line:
+            varNameList = re.findall(r'IF(.*?)>',line)
+            varValueList = re.findall(r'>(.*?)\Z',line)
+            symbol = ">"
+        elif "<" in line:
+            varNameList = re.findall(r'IF(.*?)<',line)
+            varValueList = re.findall(r'<(.*?)\Z',line)
+            symbol = "<"
     varName = ""
     varName = varName.join(varNameList)
     varName = varName.strip()
@@ -141,25 +239,93 @@ def convIF(line):
     thisLine = "if {} {} {}:".format(varName, symbol, varValue)
     return thisLine
 
+def convOpenFile(line):
+    if "READ" in line:
+        openMod = "r"
+    elif "WRITE" in line:
+        openMod = "w"
+    elif "APPEND" in line:
+        openMod = "a"
+    varNameList = re.findall(r'OPENFILE(.*?)FOR',line)
+    varName = ""
+    varName = varName.join(varNameList)
+    varName = varName.strip()
+    fileName = varName[1:]
+    fileName = fileName[:-5]
+    thisLine = "{} = open({},'{}')".format(fileName,varName,openMod)
+    return thisLine
+
+def convReadFile(line):
+    varFileList = re.findall(r'READFILE(.*?),',line)
+    varFile = ""
+    varFile = varFile.join(varFileList)
+    varFile = varFile.strip()
+    varNameList = re.findall(r',(.*?)\Z',line)
+    varName = ""
+    varName = varName.join(varNameList)
+    varName = varName.strip()
+    fileName = varFile[1:]
+    fileName = fileName[:-5]
+    thisLine = "{} = {}.readline()".format(varName,fileName)
+    return thisLine
+
+def convWriteFile(line):
+    varFileList = re.findall(r'WRITEFILE(.*?),',line)
+    varFile = ""
+    varFile = varFile.join(varFileList)
+    varFile = varFile.strip()
+    varNameList = re.findall(r',(.*?)\Z',line)
+    varName = ""
+    varName = varName.join(varNameList)
+    varName = varName.strip()
+    fileName = varFile[1:]
+    fileName = fileName[:-5]
+    thisLine = "{}.write({})".format(fileName,varName)
+    return thisLine
+
+def convCloseFile(line):
+    varFileList = re.findall(r'CLOSEFILE(.*?)\Z',line)
+    varFile = ""
+    varFile = varFile.join(varFileList)
+    varFile = varFile.strip()
+    fileName = varFile[1:]
+    fileName = fileName[:-5]
+    thisLine = "{}.close()".format(fileName)
+    return thisLine
 
 def syntaxCheck():
-    print('progressing')
+    print('syntaxCheck() under-developing')
 
 def outputFile(convFile):
-    fileConfig()
+    delBlankLines, delComments = fileConfig()
     currentWorkPath = os.path.dirname(__file__)
     genFilePath = currentWorkPath + "/convertedFile.txt"
     genTxtFile = open(genFilePath, 'w', encoding='utf-8')
     lineList = convFile.split("\n")
     for line in lineList:
+        if delBlankLines == True:
+            if line == "":
+                continue
+        if delComments == True:
+            if line[0:1] == "#":
+                continue       
         genTxtFile.write(line)
         genTxtFile.write("\n")
 
 def fileConfig():
-    print('progressing')
+    delBlankLines = False
+    delComments = False
+    sepLine()
+    print('Delete blank lines? key in 1 to confirm, enter to reject.')
+    if input() == "1":
+        delBlankLines = True
+    print('Delete comments(#)? key in 1 to confirm, enter to reject.')
+    if input() == "1":
+        delComments = True
+    return delBlankLines, delComments
 
 def executeFile():
-    print('progressing')
+    print('executeFile() under-developing')
 
 def main():
     txtfile = getFile()

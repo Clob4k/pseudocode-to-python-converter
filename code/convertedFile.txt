@@ -1,21 +1,37 @@
-# ExampleCode.txt
-# D:\OneDrive\Code\GithubProjects\ExampleCode.txt
+# ExamplePesudocode.txt
+# D:\OneDrive\Code\GithubProjects\pesudocode-to-python-converter\ExamplePesudocode.txt
 
-#DECLARE Number, Result: INTEGER
+#DECLARE ThisNum, Result: INTEGER
+#DECLARE ThisString: STRING
 myArray = []
 
 for Index in range(1,50):
     myArray[Index] = False
 
-if Num2 != 0:
+ThisNum = 5
+Result = ThisNum - 2
+Line = "LIN" + "E"
+
+len("ThisString1")
+"ThisString2"[0:5]
+"ThisString3"[1:4]
+"C".upper
+"A".lower
+
+while ThisNum < 0:
+    ThisNum = ThisNum - 1
+
+if ThisNum1 != 0:
     print("test1")
 else:
-    if Num2 <= 0:
+    if ThisNum2 < 0:
         print("test3")
     print("test2")
 
-Number = 5
-Result = Number - 2
+test = open("test.txt",'r')
+Line = test.readline()
+test.write("test")
+test.close()
 
-print(Result, Number)
+print(Result, ThisNum)
 

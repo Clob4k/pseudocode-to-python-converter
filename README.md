@@ -8,6 +8,18 @@
 
 * Develop environment: _python 3.10.2_
 
+# Contemporory limitations
+
+* Pesudocode to be converted should not have **keywords** in variable names.
+
+* This program is **not** capable of handling:
+
+1. Logical operations ``AND, OR, NOT`` within ``IF`` operation.
+
+2. ``CASE, REPEAT UNTIL, PROCEDURE, FUNCTION, CALL, EOF`` operations.
+
+3. User-defined data types
+
 # Accepted pesudocode format
 
 * All Syntax follow the Cambridge International AS & A Level Computer Science 9618 - Pesudocode Guide for Teachers.
@@ -32,7 +44,7 @@
 
 * Pay attention that symbol for assignment is ``←`` instead of ``<-`` .
 
-* Tips : You may use _ALT + 43081_ on the keybord to enter right-arrow symbol.
+* Tips : You may use _ALT + 43081_ on the keybord to enter left-arrow symbol.
 
 ```
 <variableA> ← <variableB> 
@@ -231,4 +243,18 @@ CLOSEFILE <File identifier>
 
 ## User-defined data types
 
-* To be include in future upgrades
+```
+TYPE <identifier> = (value1, value2, value3, ...)
+```
+
+```
+TYPE <pointer> = ^<Typename>
+```
+
+```
+Type <identifier1>
+    DECLARE <identifier2> : <data type>
+    DECLARE <identifier3> : <data type>
+    ...
+ENDTYPE
+```

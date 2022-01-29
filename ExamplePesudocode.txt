@@ -1,25 +1,42 @@
 // ExamplePesudocode.txt
 // D:\OneDrive\Code\GithubProjects\pesudocode-to-python-converter\ExamplePesudocode.txt
 
-DECLARE Number, Result: INTEGER
+DECLARE ThisNum, Result: INTEGER
+DECLARE ThisString: STRING
 DECLARE myArray : ARRAY [1:50] OF BOOLEAN
 
 FOR Index ← 1 TO 50
     myArray[Index] ← FALSE
 NEXT Index
 
-IF Num2 <> 0
+ThisNum ← 5
+Result ← ThisNum - 2
+Line ← "LIN" & "E"
+
+LENGTH("ThisString1")
+RIGHT("ThisString2",5)
+MID("ThisString3",2,3)
+UCASE("C")
+LCASE("A")
+
+WHILE ThisNum < 0
+    ThisNum ← ThisNum - 1
+ENDWHILE
+
+IF ThisNum1 <> 0
   THEN
     OUTPUT "test1"
 ELSE
-    IF Num2 <= 0
+    IF ThisNum2 < 0
       THEN
         OUTPUT "test3"
     ENDIF
     OUTPUT "test2"
 ENDIF
 
-Number ← 5
-Result ← Number - 2
+OPENFILE "test.txt" FOR READ
+READFILE "test.txt", Line
+WRITEFILE "test.txt", "test"
+CLOSEFILE "test.txt"
 
-OUTPUT Result, Number
+OUTPUT Result, ThisNum
