@@ -8,7 +8,7 @@
 
 * Develop environment: _python 3.10.2_
 
-# Contemporory limitations
+# Limitations
 
 You may still obtain output files when operating the program in following situations with out errors. However, there is no guarantee to generate accurate python format files.
 
