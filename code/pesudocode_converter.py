@@ -80,7 +80,13 @@ def convKeyWords(txtfile):
             elif "FOR" in line:
                 line = convFor(line)
             elif "IF" in line:
-                line = convIF(line)
+                line = convIf(line)
+            elif "CALL" in line:
+                line = convCall(line)
+            elif "PROCEDURE" in line:
+                line = convProcedure(line)
+            elif "FUNCTION" in line:
+                line = convFunction(line)
 
             line = convReplace(line)
             # indentation addition
@@ -108,6 +114,14 @@ def dirDel(line,inden,nextLine):
         line = ""
         inden = 0
         nextLine = False
+    elif "ENDPROCEDURE" in line:
+        line = ""
+        inden = 0
+        nextLine = False
+    elif "ENDFUNCTION" in line:
+        line = ""
+        inden = 0
+        nextLine = False
     return (line,inden,nextLine)
 
 def delLine(line):
@@ -118,6 +132,8 @@ def delLine(line):
     elif "WHILE" in line:
         line = line.replace("WHILE","while")
         line = line + ":"
+    elif "RETURN" in line and not "RETURNS" in line:
+        line = line.replace("RETURN","return")
     return line
 
 def convReplace(line):
@@ -204,7 +220,7 @@ def convFor(line):
     thisLine = "for {} in range({},{}):".format(varName, ini, end)
     return thisLine
 
-def convIF(line):
+def convIf(line):
     if ">=" in line:
         varNameList = re.findall(r'IF(.*?)>=',line)
         varValueList = re.findall(r'>=(.*?)\Z',line)
@@ -269,6 +285,102 @@ def convReadFile(line):
     thisLine = "{} = {}.readline()".format(varName,fileName)
     return thisLine
 
+def convCall(line):
+    thisLine = line
+    if ("(" or ")") in line:
+        varNameList = re.findall(r'\((.*?)\)',line)
+        varName = ""
+        varName = varName.join(varNameList)
+        varName = varName.strip()
+        funNameList = re.findall(r'CALL(.*?)\(',line)
+        funName = ""
+        funName = funName.join(funNameList)
+        funName = funName.strip()
+        thisLine = "{}({})".format(funName,varName)
+    else:
+        funNameList = re.findall(r'CALL(.*?)\Z',line)
+        funName = ""
+        funName = funName.join(funNameList)
+        funName = funName.strip()
+        thisLine = funName + "()"
+    return thisLine
+
+def convProcedure(line):
+    thisLine = line
+    paraNum = line.count(":")
+    if paraNum == 1:
+        varNameList = re.findall(r'\((.*?):',line)
+        varName = ""
+        varName = varName.join(varNameList)
+        varName = varName.strip()
+        funNameList = re.findall(r'PROCEDURE(.*?)\(',line)
+        funName = ""
+        funName = funName.join(funNameList)
+        funName = funName.strip()
+        thisLine = "def {}({}):".format(funName,varName)
+    elif paraNum == 0:
+        funNameList = re.findall(r'PROCEDURE(.*?)\Z',line)
+        funName = ""
+        funName = funName.join(funNameList)
+        funName = funName.strip()
+        thisLine = "def {}():".format(funName)
+    elif paraNum > 1:
+        funNameList = re.findall(r'PROCEDURE(.*?)\(',line)
+        funName = ""
+        funName = funName.join(funNameList)
+        funName = funName.strip()
+        thisLine = "def {}()".format(funName)
+        varNameList = re.findall(r'\((.*?):',line)
+        varName = ""
+        varName = varName.join(varNameList)
+        varName = varName.strip()
+        paraNameList = re.findall(r',(.*?):',line)
+        paraName = ""
+        paraName = ",".join(paraNameList)
+        paraName = paraName.strip()
+        parameter = varName + "," + paraName
+        parameter = parameter.replace(" ","")
+        thisLine = "def {}({}):".format(funName, parameter)
+    return thisLine
+
+def convFunction(line):
+    thisLine = line
+    paraNum = line.count(":")
+    if paraNum == 1:
+        varNameList = re.findall(r'\((.*?):',line)
+        varName = ""
+        varName = varName.join(varNameList)
+        varName = varName.strip()
+        funNameList = re.findall(r'FUNCTION(.*?)\(',line)
+        funName = ""
+        funName = funName.join(funNameList)
+        funName = funName.strip()
+        thisLine = "def {}({}):".format(funName,varName)
+    elif paraNum == 0:
+        funNameList = re.findall(r'FUNCTION(.*?)RETURNS',line)
+        funName = ""
+        funName = funName.join(funNameList)
+        funName = funName.strip()
+        thisLine = "def {}():".format(funName)
+    elif paraNum > 1:
+        funNameList = re.findall(r'FUNCTION(.*?)\(',line)
+        funName = ""
+        funName = funName.join(funNameList)
+        funName = funName.strip()
+        thisLine = "def {}()".format(funName)
+        varNameList = re.findall(r'\((.*?):',line)
+        varName = ""
+        varName = varName.join(varNameList)
+        varName = varName.strip()
+        paraNameList = re.findall(r',(.*?):',line)
+        paraName = ""
+        paraName = ",".join(paraNameList)
+        paraName = paraName.strip()
+        parameter = varName + "," + paraName
+        parameter = parameter.replace(" ","")
+        thisLine = "def {}({}):".format(funName, parameter)
+    return thisLine
+
 def convWriteFile(line):
     varFileList = re.findall(r'WRITEFILE(.*?),',line)
     varFile = ""
@@ -294,10 +406,11 @@ def convCloseFile(line):
     return thisLine
 
 def syntaxCheck():
-    print('syntaxCheck() under-developing')
+    print('syntaxCheck is under-developing')
 
 def outputFile(convFile):
     delBlankLines, delComments = fileConfig()
+    # fetch the operating path
     currentWorkPath = os.path.dirname(__file__)
     genFilePath = currentWorkPath + "/convertedFile.txt"
     genTxtFile = open(genFilePath, 'w', encoding='utf-8')
@@ -325,7 +438,7 @@ def fileConfig():
     return delBlankLines, delComments
 
 def executeFile():
-    print('executeFile() under-developing')
+    print('executeFile is under-developing')
 
 def main():
     txtfile = getFile()

@@ -10,24 +10,24 @@ DECLARE
 #DECLARE
 
 
-{identifer}[index]
-{identifer}[index]
+<identifer>[index]
+<identifer>[index]
 
 
 <>
 !=
 
 
-{statement} AND {statement}
-{statement} and {statement}
+<statement> AND <statement>
+<statement> and <statement>
 
 
-{statement} OR {statement}
-{statement} or {statement}
+<statement> OR <statement>
+<statement> or <statement>
 
 
-NOT {statement}
-not {statement}
+NOT <statement>
+not <statement>
 
 
 RIGHT(ThisString: STRING, x:INTEGER)
@@ -54,142 +54,142 @@ ThisChar.upper
 +
 
 
-IF {condition}
+IF <condition>
     THEN
-        {statement(s)}
+        <statement(s)>
 ENDIF
 
-if {condition}:
-    {statement(s)}
+if <condition>:
+    <statement(s)>
 
 
-IF {condition}
+IF <condition>
     THEN
-        {statement(s)}
+        <statement(s)>
     ELSE
-        {statement(s)}
+        <statement(s)>
 ENDIF
 
-if {condition}:
-    {statement(s)}
+if <condition>:
+    <statement(s)>
 else:
-    {statement(s)}
+    <statement(s)>
 
 
-CASE OF {identifer}
-    {value1} : {statement1}
-               {statement2}
-    {value2} : {statement1}
-               {statement2}
-    OTHERWISE: {statement1}
-               {statement2}
+CASE OF <identifer>
+    <value1> : <statement1>
+               <statement2>
+    <value2> : <statement1>
+               <statement2>
+    OTHERWISE: <statement1>
+               <statement2>
 ENDCASE
 
-if {identifer} = {value1}:
-    {statement1}
-    {statement2}
-elif:{identifer} = {value2}:
-    {statement1}
-    {statement2}
+if <identifer> = <value1>:
+    <statement1>
+    <statement2>
+elif:<identifer> = <value2>:
+    <statement1>
+    <statement2>
 else:
-    {statement1}
-    {statement2}
+    <statement1>
+    <statement2>
 
 
-FOR {indentifer} ← {value1} TO {value2}
-    {statements}
-NEXT {identifer}
+FOR <indentifer> ← <value1> TO <value2>
+    <statements>
+NEXT <identifer>
 
-for {indentifer} in range({value1},{value2})
-    {statements}
+for <indentifer> in range(<value1>,<value2>)
+    <statements>
 
 
 REPEAT
-    {statement(s)}
-UNTIL {condition}
+    <statement(s)>
+UNTIL <condition>
 
-{statement(s)}
-while {condition}:
-    {statement(s)}
+<statement(s)>
+while <condition>:
+    <statement(s)>
 
 
-WHILE {condition}
-    {statement(s)}
+WHILE <condition>
+    <statement(s)>
 ENDWHILE
 
-while {condition}:
-    {statement(s)}
+while <condition>:
+    <statement(s)>
 
 
-PROCEDURE {identifer}
-    {statement(s)}
+PROCEDURE <identifer>
+    <statement(s)>
 ENDPROCEDURE
 
-def {identifer}():
-    {statement(s)}
+def <identifer>():
+    <statement(s)>
 
 
-PROCEDURE {identifer}({para1}:{datatype}, {para2}:{datatype})
-    {statement(s)}
+PROCEDURE <identifer>(<para1>:<datatype>, <para2>:<datatype>)
+    <statement(s)>
 ENDPROCEDURE
 
-def {identifer}({para1},{para2}):
-    {statement(s)}
+def <identifer>(<para1>,<para2>):
+    <statement(s)>
 
 
-CALL {identifer}
-{identifer}()
+CALL <identifer>
+<identifer>()
 
 
-CALL {identifer}(Value1, Value2)
-{identifer}(Value1, Value2)
+CALL <identifer>(Value1, Value2)
+<identifer>(Value1, Value2)
 
 
-FUNCTION {identifer} RETURNS {data type}
-    {statement(s)}
+FUNCTION <identifer> RETURNS <data type>
+    <statement(s)>
 ENDFUNCTION
 
-def {identifer}():
-    {statement(s)}
-    return {variable}
+def <identifer>():
+    <statement(s)>
+    return <variable>
 
 
-FUNCTION {identifer}({para1}:{datatype}, {para2}:{datatype}) RETURNS {data type}
-    {statement(s)}
+FUNCTION <identifer>(<para1>:<datatype>, <para2>:<datatype>) RETURNS <data type>
+    <statement(s)>
 ENDFUNCTION
            
-def {identifer}({para1},{para2}):
-    {statement(s)}
-    return {variable}
+def <identifer>(<para1>,<para2>):
+    <statement(s)>
+    return <variable>
 
 
-PROCEDURE {identifier}(BYREF {para1}:{datatype}, {para2}:{datatype})
-    {statement(s)}
+PROCEDURE <identifier>(BYREF <para1>:<datatype>, <para2>:<datatype>)
+    <statement(s)>
 ENDPROCEDURE
 
-def {identifer}({para1},{para2}):
-    global {para1}
-    {statement(s)}
+def <identifer>(<para1>,<para2>):
+    global <para1>
+    <statement(s)>
 
 
-OPENFILE {File identifier} FOR {File mode}
-{File mode} : READ / WRITE / APPEND
+OPENFILE <File identifier> FOR <File mode>
+<File mode> : READ / WRITE / APPEND
 
-open({File identifier}, mode = {File mode})
-{File mode} : r / w / a
-
-
-READFILE {File identifier}, {variable: STRING}
-{variable} = {File identifier}.readline()
+open(<File identifier>, mode = <File mode>)
+<File mode> : r / w / a
 
 
-EOF({File identifier})
+READFILE <File identifier>, <variable: STRING>
+<variable> = <File identifier>.readline()
+
+
+EOF(<File identifier>)
 NextLine = ""
 
-WRITEFILE {File identifier}, {data}
-{File identifier}.write({data})
+WRITEFILE <File identifier>, <data>
+<File identifier>.write(<data>)
 
 
-CLOSEFILE {File identifier}
-{File identifier}.close()
+CLOSEFILE <File identifier>
+<File identifier>.close()
 

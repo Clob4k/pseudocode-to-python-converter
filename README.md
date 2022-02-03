@@ -22,7 +22,7 @@ You may still obtain output files when operating the program in following situat
 
 2. logical operations ``AND, OR, NOT`` within ``IF`` operation.
 
-3. ``CASE, REPEAT UNTIL, PROCEDURE, FUNCTION, CALL, EOF`` operations.
+3. ``CASE, REPEAT UNTIL, BYREF, EOF`` operations.
 
 4. **user-defined data types**
 
@@ -30,9 +30,9 @@ You may still obtain output files when operating the program in following situat
 
 * All Syntax follow the Cambridge International AS & A Level Computer Science 9618 - Pesudocode Guide for Teachers.
 
-* Command words implemented should be in UPPER case.
+* Command words implemented should be in **UPPER** case.
 
-* Indentations should be made where necessary and appropriate.
+* **Indentations** should be made where necessary and appropriate.
 
 * Comments are preceded by ``//``.
 
@@ -135,6 +135,9 @@ UCASE(ThisChar: CHAR)
 
 ## Selection
 
+Noted that ``THEN`` only has two spaces of indentation, while the statement has four spaces (a full) indentation.
+
+And ``ELSE`` lines up with ``IF`` . Wrong format may lead to serious errors. 
 
 ```
 IF <condition>
