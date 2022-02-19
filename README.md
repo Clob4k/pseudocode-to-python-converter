@@ -10,19 +10,21 @@
 
 # Limitations
 
-You may still obtain output files when operating the program in following situations with out errors. However, there is no guarantee to generate accurate python format files.
+You may still obtain output files when operating the program in following situations without errors. However, there is no guarantee to generate accurate python format files.
 
-* Pesudocode to be converted should not have **keywords** in variable names.
+* Pesudocode to be converted should not have **any keywords** in variable names.
 
 * Mutiline command without pre-definition is not accepted.
+
+* Unexpected brackets ``()`` may lead to serious errors.
 
 * This program is **not** capable of handling pesudocode with :
 
 1. command words that are not mentioned in **Accepted pesudocode format** section.
 
-2. logical operations ``AND, OR, NOT`` within ``IF`` operation.
+2. logical operations ``AND, OR, NOT`` within ``IF, WHILE, CASE, REPEAT UNTIL`` operation.
 
-3. ``CASE, REPEAT UNTIL, BYREF, EOF`` operations.
+3. ``BYREF, EOF`` operations.
 
 4. **user-defined data types**
 
@@ -135,9 +137,9 @@ UCASE(ThisChar: CHAR)
 
 ## Selection
 
-Noted that ``THEN`` only has two spaces of indentation, while the statement has four spaces (a full) indentation.
+Noted that ``THEN`` only has two spaces of indentation, while the statement has four spaces (a tab) indentation.
 
-And ``ELSE`` lines up with ``IF`` . Wrong format may lead to serious errors. 
+And ``ELSE`` lines up with ``THEN`` . Wrong format may lead to serious errors. 
 
 ```
 IF <condition>
@@ -150,7 +152,7 @@ ENDIF
 IF <condition>
   THEN
     <statement(s)>
-ELSE
+  ELSE
     <statement(s)>
 ENDIF
 ```
@@ -225,6 +227,9 @@ PROCEDURE <identifier>(BYREF <para1>:<datatype>, <para2>:<datatype>)
     <statement(s)>
 ENDPROCEDURE
 ```
+Noted that ``BYREF`` applies to all the parameters in the procedure.
+
+In other words, in a particular procedure, parameters can only be passed by reference or by values.
 
 ## File handling
 

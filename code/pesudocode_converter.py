@@ -1,449 +1,533 @@
-# pesudocode_converter.py
-# This program is developed by @Luke.Tang 2022
+"""
+pesudocode_converter.py
+coding:utf-8
+
+Developed by @Luke.Tang 2022
+This program is for converting the pesudocode to the Python code.
+For more information, please visit github.com/Clob4k/pesudocode-to-python-converter
+"""
 
 import regex as re
-import os
 
-def sepLine():
-    print("-"*45)
+INDENTATION = "    "
 
-def getFile():
-    filePath = inputFilePath()
-    txtfile = readFile(filePath)
-    while txtfile == "notFound":
-        filePath = inputFilePath()
-        txtfile = readFile(filePath)
-    return txtfile
-
-def inputFilePath():
-    sepLine()
-    filePath = input("Key in the file path of the file to convert:\n")
-    filePath = filePath.replace("\\", "/")
-    filePath = filePath.strip()
-    return filePath
-
-def readFile(filePath):
-    try:
-        file = open(filePath, 'r', encoding='utf-8')
-        txtfile = file.readlines()
-        return txtfile
-    except:
-        print("Wrong file path or file name, consider retry.")
-        return "notFound"
-
-def convertFile(txtfile):
-    convFile = convKeyWords(txtfile)
-    syntaxCheck()
+def convert_file(txtfile):
+    convFile = convert_key_words(txtfile)
     return convFile
 
-def convKeyWords(txtfile):
-    sepLine()
-    print("Convertion in process.")
-    convFile = ""
-    for line in txtfile:
+
+def convert_key_words(txtfile):
+    global INDENTATION
+    convFileList = []
+    convFlag = False
+    caseFlag, repeatFlag = False, False
+    convMod = ""
+
+    for Index in range(len(txtfile)):
+        line = txtfile[Index]
         nextLine = True
+
         if line == "\n":
             nextLine = False
+        elif "//" in line:
+            line = line.replace("//", "#")
+            nextLine = False
+        elif convFlag:
+            if convMod == "CASE":
+                if "ENDCASE" in line:
+                    caseFlag = False
+                    caselist.append(line)
+                    line, inden, nextLine = direct_deletion_config()
+
+                if caseFlag:
+                    caselist.append(line)
+                    line, inden, nextLine = direct_deletion_config()
+                else:
+                    convcaselist = pesudo_case(caselist)
+                    convFileList.extend(convcaselist)
+                    convFlag = False
+                    convMod = ""
+
+            elif convMod == "REPEAT":
+                if "UNTIL" in line:
+                    repeatFlag = False
+                    repeatlist.append(line)
+                    line, inden, nextLine = direct_deletion_config()
+
+                if repeatFlag:
+                    repeatlist.append(line)
+                    line, inden, nextLine = direct_deletion_config()
+                else:
+                    convrepeatlist = pesudo_repeat(repeatlist)
+                    convFileList.extend(convrepeatlist)
+                    convFlag = False
+                    convMod = ""
         else:
-            # indentation count
-            blanks = 0
-            while line[blanks] == " ":
-                blanks = blanks + 4
-            inden = int(blanks/4)
-            line = line.strip()
 
-            # line deletion
-            line,inden,nextLine = dirDel(line,inden,nextLine)
-            line = delLine(line)
+            if "CASE" in line and not "ENDCASE" in line:
+                convFlag = True
+                caseFlag = True
+                convMod = "CASE"
+                caselist = []
+                caselist.append(line)
+                line, inden, nextLine = direct_deletion_config()
+            elif "REPEAT" in line:
+                convFlag = True
+                repeatFlag = True
+                convMod = "REPEAT"
+                repeatlist = []
+                repeatlist.append(line)
+                line, inden, nextLine = direct_deletion_config()
+            else:
+                inden = indentation_count(line)
+                line = line.strip()
+                line, inden, nextLine = direct_deletion(line, inden, nextLine)
+                line = line_delection(line)
+                line = line_conversion(line)
 
-            # line convertion
-            if "LCASE" in line:
-                line = convLcase(line)
-            elif "UCASE" in line:
-                line = convUcase(line)
-            elif "RIGHT" in line:
-                line = convRight(line)
-            elif "MID" in line:
-                line = convMid(line)
-            elif "OUTPUT" in line:
-                line = convOutput(line)
-            elif "DECLARE" in line:
-                line = convDeclare(line)
-            elif "OPENFILE" in line:
-                line = convOpenFile(line)
-            elif "READFILE" in line:
-                line = convReadFile(line)
-            elif "WRITEFILE" in line:
-                line = convWriteFile(line)
-            elif "CLOSEFILE" in line:
-                line = convCloseFile(line)
-            elif "FOR" in line:
-                line = convFor(line)
-            elif "IF" in line:
-                line = convIf(line)
-            elif "CALL" in line:
-                line = convCall(line)
-            elif "PROCEDURE" in line:
-                line = convProcedure(line)
-            elif "FUNCTION" in line:
-                line = convFunction(line)
-
-            line = convReplace(line)
+            line = pesudo_replace(line)
             # indentation addition
-            line = "    "*inden + line
+            line = INDENTATION * inden + line
 
-        convFile = convFile + line
+        if not convFlag:
+            convFileList.append(line)
+
         if nextLine == True:
-            convFile = convFile + "\n"
-    return convFile
+            convFileList.append("\n")
 
-def dirDel(line,inden,nextLine):
+    return convFileList
+
+
+def line_conversion(line):
+    if "LCASE" in line:
+        line = pesudo_lcase(line)
+    elif "UCASE" in line:
+        line = pesudo_ucase(line)
+    elif "RIGHT" in line:
+        line = pesudo_right(line)
+    elif "MID" in line:
+        line = pesudo_mid(line)
+    elif "OUTPUT" in line:
+        line = pesudo_output(line)
+    elif "DECLARE" in line:
+        line = pesudo_declare(line)
+    elif "OPENFILE" in line:
+        line = pesudo_openfile(line)
+    elif "READFILE" in line:
+        line = pesudo_readfile(line)
+    elif "WRITEFILE" in line:
+        line = pesudo_writefile(line)
+    elif "CLOSEFILE" in line:
+        line = pesudo_closefile(line)
+    elif "FOR" in line:
+        line = pesudo_for(line)
+    elif "IF" in line and not "ENDIF" in line:
+        line = pesudo_if(line)
+    elif "CALL" in line:
+        line = pesudo_call(line)
+    elif "PROCEDURE" in line:
+        line = pesudo_procedure(line)
+    elif "FUNCTION" in line:
+        line = pesudo_function(line)
+    return line
+
+
+def indentation_count(line):
+    blanks = 0
+    while line[blanks] == " ":
+        blanks = blanks + 4
+    inden = int(blanks / 4)
+    return inden
+
+
+def direct_deletion(line, inden, nextLine):
     if "NEXT" in line:
-        line = ""
-        inden = 0
-        nextLine = False
+        line, inden, nextLine = direct_deletion_config()
     elif "THEN" in line:
-        line = ""
-        inden = 0
-        nextLine = False
+        line, inden, nextLine = direct_deletion_config()
     elif "ENDIF" in line:
-        line = ""
-        inden = 0
-        nextLine = False
+        line, inden, nextLine = direct_deletion_config()
     elif "ENDWHILE" in line:
-        line = ""
-        inden = 0
-        nextLine = False
+        line, inden, nextLine = direct_deletion_config()
     elif "ENDPROCEDURE" in line:
-        line = ""
-        inden = 0
-        nextLine = False
+        line, inden, nextLine = direct_deletion_config()
     elif "ENDFUNCTION" in line:
-        line = ""
-        inden = 0
-        nextLine = False
-    return (line,inden,nextLine)
+        line, inden, nextLine = direct_deletion_config()
+    return line, inden, nextLine
 
-def delLine(line):
-    if "ELSE" in line:
-        line = line.replace("ELSE","else:")
+
+def direct_deletion_config():
+    line = ""
+    inden = 0
+    nextLine = False
+    return line, inden, nextLine
+
+
+def line_delection(line):
+    if "  ELSE" in line:
+        line = line.replace("  ELSE", "else:")
     elif "LENGTH" in line:
-        line = line.replace("LENGTH","len")
+        line = line.replace("LENGTH", "len")
     elif "WHILE" in line:
-        line = line.replace("WHILE","while")
+        line = line.replace("WHILE", "while")
         line = line + ":"
     elif "RETURN" in line and not "RETURNS" in line:
-        line = line.replace("RETURN","return")
+        line = line.replace("RETURN", "return")
     return line
 
-def convReplace(line):
-    line = line.replace('//','#')
-    line = line.replace("NOT","not")
-    line = line.replace("OR","or")
-    line = line.replace("AND","and")
-    line = line.replace("TRUE","True")
-    line = line.replace("FALSE","False")
-    line = line.replace("←","=")
-    line = line.replace("&","+")
+
+def pesudo_replace(line):
+    line = line.replace("NOT", "not")
+    line = line.replace("OR", "or")
+    line = line.replace("AND", "and")
+    line = line.replace("TRUE", "True")
+    line = line.replace("FALSE", "False")
+    line = line.replace("←", "=")
+    line = line.replace("&", "+")
+    line = line.replace("<>", "!=")
     return line
 
-def convLcase(line):
-    # get variable name
-    varNameList = re.findall(r'LCASE\((.*?)\)',line)
+
+def pesudo_lcase(line):
     varName = ""
-    varName = varName.join(varNameList)
+    varName = varName.join(re.findall(r"LCASE\((.*?)\)", line))
     varName = varName.strip()
     thisLine = "{}.lower".format(varName)
     return thisLine
 
-def convUcase(line):
-    varNameList = re.findall(r'UCASE\((.*?)\)',line)
+
+def pesudo_ucase(line):
     varName = ""
-    varName = varName.join(varNameList)
+    varName = varName.join(re.findall(r"UCASE\((.*?)\)", line))
     varName = varName.strip()
     thisLine = "{}.upper".format(varName)
     return thisLine
 
-def convRight(line):
-    varNameList = re.findall(r'RIGHT\((.*?),',line)
-    varNumList = re.findall("\d+",line)
+
+def pesudo_right(line):
+    varNameList = re.findall(r"RIGHT\((.*?),", line)
+    varNumList = re.findall("\d+", line)
     integer = varNumList[-1]
     varName = ""
     varName = varName.join(varNameList)
     varName = varName.strip()
-    thisLine = "{}[0:{}]".format(varName,integer)
+    thisLine = "{}[0:{}]".format(varName, integer)
     return thisLine
 
-def convMid(line):
-    varNameList = re.findall(r'\((.*?),',line)
-    varNumList = re.findall("\d+",line)
+
+def pesudo_mid(line):
+    varNameList = re.findall(r"\((.*?),", line)
+    varNumList = re.findall("\d+", line)
     startVal = varNumList[-2]
     lenVal = varNumList[-1]
-    startVal = str(eval(startVal)-1)
-    lenVal = str(eval(lenVal)+1)
+    startVal = str(eval(startVal) - 1)
+    lenVal = str(eval(lenVal) + 1)
     varName = ""
     varName = varName.join(varNameList)
     varName = varName.strip()
-    thisLine = "{}[{}:{}]".format(varName,startVal,lenVal)
+    thisLine = "{}[{}:{}]".format(varName, startVal, lenVal)
     return thisLine
 
-def convOutput(line):
+
+def pesudo_output(line):
     thisLine = line
-    varNameList = re.findall(r'OUTPUT(.*?)\Z',line)
     varName = ""
-    varName = varName.join(varNameList)
+    varName = varName.join(re.findall(r"OUTPUT(.*?)\Z", line))
     varName = varName.strip()
-    varName = varName.replace("&","+")
+    varName = varName.replace("&", "+")
     thisLine = "print({})".format(varName)
     return thisLine
 
-def convDeclare(line):
+
+def pesudo_declare(line):
     thisLine = line
     if "ARRAY" in line:
-        varNameList = re.findall(r'DECLARE(.*?):',line)
         varName = ""
-        varName = varName.join(varNameList)
+        varName = varName.join(re.findall(r"DECLARE(.*?):", line))
         varName = varName.strip()
         thisLine = varName + " = []"
     else:
-        thisLine = line.replace("DECLARE","#DECLARE")
+        thisLine = line.replace("DECLARE", "# DECLARE")
     return thisLine
 
-def convFor(line):
-    varNameList = re.findall(r'FOR(.*?)←',line)
+
+def pesudo_for(line):
     varName = ""
-    varName = varName.join(varNameList)
+    varName = varName.join(re.findall(r"FOR(.*?)←", line))
     varName = varName.strip()
-    varRangeList = re.findall("\d+",line)
-    ini = varRangeList[-2]
-    end = varRangeList[-1]
-    thisLine = "for {} in range({},{}):".format(varName, ini, end)
+    varRangeList = re.findall("\d+", line)
+    iniVal = varRangeList[-2]
+    endVal = varRangeList[-1]
+    thisLine = "for {} in range({},{}):".format(varName, iniVal, endVal)
     return thisLine
 
-def convIf(line):
+
+def pesudo_if(line):
     if ">=" in line:
-        varNameList = re.findall(r'IF(.*?)>=',line)
-        varValueList = re.findall(r'>=(.*?)\Z',line)
+        varNameList = re.findall(r"IF(.*?)>=", line)
+        varValueList = re.findall(r">=(.*?)\Z", line)
         symbol = ">="
     elif "<=" in line:
-        varNameList = re.findall(r'IF(.*?)<=',line)
-        varValueList = re.findall(r'<=(.*?)\Z',line)
+        varNameList = re.findall(r"IF(.*?)<=", line)
+        varValueList = re.findall(r"<=(.*?)\Z", line)
         symbol = "<="
     elif "<>" in line:
-        varNameList = re.findall(r'IF(.*?)<>',line)
-        varValueList = re.findall(r'<>(.*?)\Z',line)
+        varNameList = re.findall(r"IF(.*?)<>", line)
+        varValueList = re.findall(r"<>(.*?)\Z", line)
         symbol = "!="
     else:
         if "=" in line:
-            varNameList = re.findall(r'IF(.*?)=',line)
-            varValueList = re.findall(r'=(.*?)\Z',line)
+            varNameList = re.findall(r"IF(.*?)=", line)
+            varValueList = re.findall(r"=(.*?)\Z", line)
             symbol = "=="
         elif ">" in line:
-            varNameList = re.findall(r'IF(.*?)>',line)
-            varValueList = re.findall(r'>(.*?)\Z',line)
+            varNameList = re.findall(r"IF(.*?)>", line)
+            varValueList = re.findall(r">(.*?)\Z", line)
             symbol = ">"
         elif "<" in line:
-            varNameList = re.findall(r'IF(.*?)<',line)
-            varValueList = re.findall(r'<(.*?)\Z',line)
+            varNameList = re.findall(r"IF(.*?)<", line)
+            varValueList = re.findall(r"<(.*?)\Z", line)
             symbol = "<"
+        else:
+            print("Error: {}".format(line))
     varName = ""
     varName = varName.join(varNameList)
     varName = varName.strip()
     varValue = ""
     varValue = varValue.join(varValueList)
-    varValue = varValue.strip()  
+    varValue = varValue.strip()
     thisLine = "if {} {} {}:".format(varName, symbol, varValue)
     return thisLine
 
-def convOpenFile(line):
+
+def pesudo_case(caselist):
+    global INDENTATION
+    convcaselist = []
+    forcount = 0
+    inden = indentation_count(caselist[0])
+    for caseline in caselist:
+        caseline = caseline.strip()
+        if "CASE" in caseline and not "ENDCASE" in caseline:
+            identifer = pesudo_case_header(caseline)           
+        elif "OTHERWISE" in caseline:
+            statement = pesudo_case_statement(caseline)
+            statement = line_conversion(statement)
+            statement = pesudo_replace(statement)
+            convcaselist.append(inden*INDENTATION + "else:")
+            convcaselist.append("\n")
+            statement = (inden+1)*INDENTATION + statement
+            convcaselist.append(statement)
+            convcaselist.append("\n")
+        elif ":" in caseline and not "OTHERWISE" in caseline:
+            statement = pesudo_case_statement(caseline)
+            statement = line_conversion(statement)
+            value = pesodo_case_value(caseline)
+            statement = pesudo_replace(statement)
+            if forcount == 0:
+                convcaselist.append(inden*INDENTATION + "if {} == {}:".format(identifer, value))
+                forcount += 1
+            else:
+                convcaselist.append(inden*INDENTATION + "elif {} == {}:".format(identifer, value))
+            convcaselist.append("\n")
+            statement = (inden+1)*INDENTATION + statement
+            convcaselist.append(statement)
+            convcaselist.append("\n")
+        elif "ENDCASE" in caseline:
+            continue
+        else:
+            statement = line_conversion(caseline)
+            statement = pesudo_replace(statement)
+            statement = (inden+1)*INDENTATION + statement
+            convcaselist.append(statement)
+            convcaselist.append("\n")
+    return convcaselist
+
+
+def pesudo_case_header(caseline):
+    identifer = ""
+    identifer = identifer.join(re.findall(r"OF(.*?)\Z", caseline))
+    identifer = identifer.strip()
+    return identifer
+
+
+def pesudo_case_statement(caseline):
+    statement = ""
+    statement = statement.join(re.findall(r":(.*?)\Z", caseline))
+    statement = statement.strip()
+    return statement
+
+
+def pesodo_case_value(caseline):
+    value = ""
+    value = value.join(re.findall(r"\A(.*?):", caseline))
+    value = value.strip()
+    return value
+
+
+def pesudo_repeat(repeatlist):
+    global INDENTATION
+    convrepeatlist, iterativepart = [], []
+    inden = indentation_count(repeatlist[0])
+    for repeatline in repeatlist:
+        repeatline = repeatline.strip()
+        if "REPEAT" in repeatline:
+            continue
+        elif "UNTIL" in repeatline:
+            convrepeatlist.extend(iterativepart)
+            condition = pesudo_repeat_condition(repeatline)
+            condition = line_conversion(condition)
+            condition = pesudo_replace(condition)
+            convrepeatlist.append(inden*INDENTATION + "while {}:".format(condition))
+            convrepeatlist.append("\n")
+            for elements in iterativepart:
+                elements = (inden+1)*INDENTATION + elements
+                convrepeatlist.append(elements)
+        else:
+            statement = line_conversion(repeatline)
+            statement = pesudo_replace(statement)
+            statement = inden*INDENTATION + statement
+            iterativepart.append(statement)
+            iterativepart.append("\n")
+    return convrepeatlist
+
+
+def pesudo_repeat_condition(repeatline):
+    condition = ""
+    condition = condition.join(re.findall(r"UNTIL(.*?)\Z", repeatline))
+    condition = condition.strip()
+    return condition
+
+def pesudo_openfile(line):
     if "READ" in line:
         openMod = "r"
     elif "WRITE" in line:
         openMod = "w"
     elif "APPEND" in line:
         openMod = "a"
-    varNameList = re.findall(r'OPENFILE(.*?)FOR',line)
     varName = ""
-    varName = varName.join(varNameList)
+    varName = varName.join(re.findall(r"OPENFILE(.*?)FOR", line))
     varName = varName.strip()
     fileName = varName[1:]
     fileName = fileName[:-5]
-    thisLine = "{} = open({},'{}')".format(fileName,varName,openMod)
+    thisLine = "{} = open({},'{}')".format(fileName, varName, openMod)
     return thisLine
 
-def convReadFile(line):
-    varFileList = re.findall(r'READFILE(.*?),',line)
+
+def pesudo_readfile(line):
     varFile = ""
-    varFile = varFile.join(varFileList)
+    varFile = varFile.join(re.findall(r"READFILE(.*?),", line))
     varFile = varFile.strip()
-    varNameList = re.findall(r',(.*?)\Z',line)
     varName = ""
-    varName = varName.join(varNameList)
+    varName = varName.join(re.findall(r",(.*?)\Z", line))
     varName = varName.strip()
     fileName = varFile[1:]
     fileName = fileName[:-5]
-    thisLine = "{} = {}.readline()".format(varName,fileName)
+    thisLine = "{} = {}.readline()".format(varName, fileName)
     return thisLine
 
-def convCall(line):
+
+def pesudo_call(line):
     thisLine = line
     if ("(" or ")") in line:
-        varNameList = re.findall(r'\((.*?)\)',line)
         varName = ""
-        varName = varName.join(varNameList)
+        varName = varName.join(re.findall(r"\((.*?)\)", line))
         varName = varName.strip()
-        funNameList = re.findall(r'CALL(.*?)\(',line)
         funName = ""
-        funName = funName.join(funNameList)
+        funName = funName.join(re.findall(r"CALL(.*?)\(", line))
         funName = funName.strip()
-        thisLine = "{}({})".format(funName,varName)
+        thisLine = "{}({})".format(funName, varName)
     else:
-        funNameList = re.findall(r'CALL(.*?)\Z',line)
         funName = ""
-        funName = funName.join(funNameList)
+        funName = funName.join(re.findall(r"CALL(.*?)\Z", line))
         funName = funName.strip()
         thisLine = funName + "()"
     return thisLine
 
-def convProcedure(line):
+
+def pesudo_procedure(line):
     thisLine = line
     paraNum = line.count(":")
     if paraNum == 1:
-        varNameList = re.findall(r'\((.*?):',line)
         varName = ""
-        varName = varName.join(varNameList)
+        varName = varName.join(re.findall(r"\((.*?):", line))
         varName = varName.strip()
-        funNameList = re.findall(r'PROCEDURE(.*?)\(',line)
         funName = ""
-        funName = funName.join(funNameList)
+        funName = funName.join(re.findall(r"PROCEDURE(.*?)\(", line))
         funName = funName.strip()
-        thisLine = "def {}({}):".format(funName,varName)
+        thisLine = "def {}({}):".format(funName, varName)
     elif paraNum == 0:
-        funNameList = re.findall(r'PROCEDURE(.*?)\Z',line)
         funName = ""
-        funName = funName.join(funNameList)
+        funName = funName.join(re.findall(r"PROCEDURE(.*?)\Z", line))
         funName = funName.strip()
         thisLine = "def {}():".format(funName)
     elif paraNum > 1:
-        funNameList = re.findall(r'PROCEDURE(.*?)\(',line)
         funName = ""
-        funName = funName.join(funNameList)
+        funName = funName.join(re.findall(r"PROCEDURE(.*?)\(", line))
         funName = funName.strip()
         thisLine = "def {}()".format(funName)
-        varNameList = re.findall(r'\((.*?):',line)
         varName = ""
-        varName = varName.join(varNameList)
+        varName = varName.join(re.findall(r"\((.*?):", line))
         varName = varName.strip()
-        paraNameList = re.findall(r',(.*?):',line)
         paraName = ""
-        paraName = ",".join(paraNameList)
+        paraName = ",".join(re.findall(r",(.*?):", line))
         paraName = paraName.strip()
         parameter = varName + "," + paraName
-        parameter = parameter.replace(" ","")
+        parameter = parameter.replace(" ", "")
         thisLine = "def {}({}):".format(funName, parameter)
     return thisLine
 
-def convFunction(line):
+
+def pesudo_function(line):
     thisLine = line
     paraNum = line.count(":")
     if paraNum == 1:
-        varNameList = re.findall(r'\((.*?):',line)
         varName = ""
-        varName = varName.join(varNameList)
+        varName = varName.join(re.findall(r"\((.*?):", line))
         varName = varName.strip()
-        funNameList = re.findall(r'FUNCTION(.*?)\(',line)
         funName = ""
-        funName = funName.join(funNameList)
+        funName = funName.join(re.findall(r"FUNCTION(.*?)\(", line))
         funName = funName.strip()
-        thisLine = "def {}({}):".format(funName,varName)
+        thisLine = "def {}({}):".format(funName, varName)
     elif paraNum == 0:
-        funNameList = re.findall(r'FUNCTION(.*?)RETURNS',line)
         funName = ""
-        funName = funName.join(funNameList)
+        funName = funName.join(re.findall(r"FUNCTION(.*?)RETURNS", line))
         funName = funName.strip()
         thisLine = "def {}():".format(funName)
     elif paraNum > 1:
-        funNameList = re.findall(r'FUNCTION(.*?)\(',line)
         funName = ""
-        funName = funName.join(funNameList)
+        funName = funName.join(re.findall(r"FUNCTION(.*?)\(", line))
         funName = funName.strip()
         thisLine = "def {}()".format(funName)
-        varNameList = re.findall(r'\((.*?):',line)
         varName = ""
-        varName = varName.join(varNameList)
+        varName = varName.join(re.findall(r"\((.*?):", line))
         varName = varName.strip()
-        paraNameList = re.findall(r',(.*?):',line)
         paraName = ""
-        paraName = ",".join(paraNameList)
+        paraName = ",".join(re.findall(r",(.*?):", line))
         paraName = paraName.strip()
         parameter = varName + "," + paraName
-        parameter = parameter.replace(" ","")
+        parameter = parameter.replace(" ", "")
         thisLine = "def {}({}):".format(funName, parameter)
     return thisLine
 
-def convWriteFile(line):
-    varFileList = re.findall(r'WRITEFILE(.*?),',line)
+
+def pesudo_writefile(line):
     varFile = ""
-    varFile = varFile.join(varFileList)
+    varFile = varFile.join(re.findall(r"WRITEFILE(.*?),", line))
     varFile = varFile.strip()
-    varNameList = re.findall(r',(.*?)\Z',line)
     varName = ""
-    varName = varName.join(varNameList)
+    varName = varName.join(re.findall(r",(.*?)\Z", line))
     varName = varName.strip()
     fileName = varFile[1:]
     fileName = fileName[:-5]
-    thisLine = "{}.write({})".format(fileName,varName)
+    thisLine = "{}.write({})".format(fileName, varName)
     return thisLine
 
-def convCloseFile(line):
-    varFileList = re.findall(r'CLOSEFILE(.*?)\Z',line)
+
+def pesudo_closefile(line):
     varFile = ""
-    varFile = varFile.join(varFileList)
+    varFile = varFile.join(re.findall(r"CLOSEFILE(.*?)\Z", line))
     varFile = varFile.strip()
     fileName = varFile[1:]
     fileName = fileName[:-5]
     thisLine = "{}.close()".format(fileName)
     return thisLine
-
-def syntaxCheck():
-    print('syntaxCheck is under-developing')
-
-def outputFile(convFile):
-    delBlankLines, delComments = fileConfig()
-    # fetch the operating path
-    currentWorkPath = os.path.dirname(__file__)
-    genFilePath = currentWorkPath + "/convertedFile.txt"
-    genTxtFile = open(genFilePath, 'w', encoding='utf-8')
-    lineList = convFile.split("\n")
-    for line in lineList:
-        if delBlankLines == True:
-            if line == "":
-                continue
-        if delComments == True:
-            if line[0:1] == "#":
-                continue       
-        genTxtFile.write(line)
-        genTxtFile.write("\n")
-
-def fileConfig():
-    delBlankLines = False
-    delComments = False
-    sepLine()
-    print('Delete blank lines? key in 1 to confirm, enter to reject.')
-    if input() == "1":
-        delBlankLines = True
-    print('Delete comments(#)? key in 1 to confirm, enter to reject.')
-    if input() == "1":
-        delComments = True
-    return delBlankLines, delComments
-
-def executeFile():
-    print('executeFile is under-developing')
-
-def main():
-    txtfile = getFile()
-    convFile = convertFile(txtfile)
-    outputFile(convFile)
-    executeFile()
-
-main()
