@@ -8,12 +8,16 @@ For more information, please visit github.com/Clob4k/pesudocode-to-python-conver
 """
 
 import pesudocode_converter as conv
-import user_interface as inf
+# import user_interface as inf
 import file_operation as file
 import syntax_check as syn
 
 
+#def interface_setup():
+#    inf.window.mainloop()
+
 def main():
+    # interface_setup()
     txtfile = file.get_file()
     print("Convertion in process.")
     convfile = conv.convert_file(txtfile)

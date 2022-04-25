@@ -18,6 +18,8 @@ You may still obtain output files when operating the program in following situat
 
 * Unexpected brackets ``()`` may lead to serious errors.
 
+* Additional blanks preceded, or implemented in commands eg. ``LENGTH (ThisString)`` will not be accepted, since it is considered as wrong syntax.
+
 * This program is **not** capable of handling pesudocode with :
 
 1. command words that are not mentioned in **Accepted pesudocode format** section.
@@ -34,9 +36,11 @@ You may still obtain output files when operating the program in following situat
 
 * Command words implemented should be in **UPPER** case.
 
+* Variable identifers are recommended to be in **CamelCaps** while under-scores are also acceptable.
+
 * **Indentations** should be made where necessary and appropriate.
 
-* Comments are preceded by ``//``.
+* **Comments** are preceded by ``//``.
 
 ## Data types
 
@@ -44,15 +48,15 @@ You may still obtain output files when operating the program in following situat
 
 * The converted file follows original identifiers.
 
-* Variable declaration will not be converted since it does not exists in python.
+* Variable declaration will be converted into comments since it does not exists in python.
 
-* Constant will be regarded as a variable.
+* Constants will be regarded as variables even if it may not be altered.
 
 ## Assignment
 
 * Pay attention that symbol for assignment is ``←`` instead of ``<-`` .
 
-* Tips : You may use _ALT + 43081_ on the keybord to enter left-arrow symbol.
+* You may use _ALT + 43081_ on the keybord to enter left-arrow symbol.
 
 ```
 <variableA> ← <variableB> 
@@ -140,6 +144,8 @@ UCASE(ThisChar: CHAR)
 Noted that ``THEN`` only has two spaces of indentation, while the statement has four spaces (a tab) indentation.
 
 And ``ELSE`` lines up with ``THEN`` . Wrong format may lead to serious errors. 
+
+Do check the enclose for ``CASE`` statement since it is crucial for convertion.
 
 ```
 IF <condition>

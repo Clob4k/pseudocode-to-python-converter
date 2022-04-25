@@ -44,4 +44,4 @@ def Function(NoTelNumber,Index,ThisName):
 Procedure()
 Function(NoTelNumber, ThisName)
 
-exmaple = open("exmaple.txt",'r')
+example = open("example.txt",'r')
