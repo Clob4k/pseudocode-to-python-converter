@@ -12,10 +12,10 @@ import file_operation as file
 
 
 def main():
-    txtfile = file.get_file()
-    print("Convertion in process.")
-    convfile = conv.convert_file(txtfile)
-    file.out_put_file(convfile)
+    textfile = file.get_file()
+    print("Conversion in process.")
+    convert_file = conv.convert_file(textfile)
+    file.out_put_file(convert_file)
 
 
 main()

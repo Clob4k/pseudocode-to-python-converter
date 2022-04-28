@@ -12,12 +12,12 @@ import os
 
 def get_file():
     FilePath = input_file_path()
-    Txtfile = read_file(FilePath)
+    textfile = read_file(FilePath)
 
-    while Txtfile == "NotFound":
+    while textfile == "NotFound":
         FilePath = input_file_path()
-        Txtfile = read_file(FilePath)
-    return Txtfile
+        textfile = read_file(FilePath)
+    return textfile
 
 
 def input_file_path():
@@ -31,12 +31,12 @@ def input_file_path():
     return FilePath
 
 
-def read_file(FilePath):
+def read_file(filepath):
     try:
-        File = open(FilePath, "r", encoding="utf-8")
-        Txtfile = File.readlines()
-        return Txtfile
-    except:
+        File = open(filepath, "r", encoding="utf-8")
+        textfile = File.readlines()
+        return textfile
+    except FileNotFoundError:
         print("Wrong file path or file name, consider retry.")
         return "NotFound"
 
@@ -44,26 +44,26 @@ def read_file(FilePath):
 def file_config():
     DelBlankLines = False
     DelComments = False
-    print("Delete blank lines? key in 1 to confirm, enter to reject.")
+    print("Delete blank lines? key in 1 to confirm, press enter to reserve.")
     if input() == "1":
         DelBlankLines = True
-    print("Delete comments(#)? key in 1 to confirm, enter to reject.")
+    print("Delete comments? key in 1 to confirm, press enter to reserve.")
     if input() == "1":
         DelComments = True
     return DelBlankLines, DelComments
 
 
-def out_put_file(convFileList):
+def out_put_file(filelist):
     DelBlankLines, DelComments = file_config()
     # fetch the operating path
     currentWorkPath = os.path.dirname(__file__)
     genFilePath = currentWorkPath + "/converted_file.txt"
     genTxtFile = open(genFilePath, "w", encoding="utf-8")
-    for line in convFileList:
-        if DelBlankLines == True:
+    for line in filelist:
+        if DelBlankLines:
             if line == "":
                 continue
-        if DelComments == True:
+        if DelComments:
             if line[0:1] == "#":
                 continue
         genTxtFile.write(line)

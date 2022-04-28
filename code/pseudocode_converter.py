@@ -11,91 +11,89 @@ import regex as re
 
 INDENTATION = "    "
 
-def convert_file(txtfile):
-    convFile = convert_key_words(txtfile)
-    return convFile
+
+def convert_file(textfile):
+    converted_file = convert_key_words(textfile)
+    return converted_file
 
 
-def convert_key_words(txtfile):
+def convert_key_words(textfile):
     global INDENTATION
-    convFileList = []
-    convFlag = False
-    caseFlag, repeatFlag = False, False
-    convMod = ""
+    case_list, repeat_list, converted_file_list = [], [], []
+    convert_flag, case_flag, repeat_flag = False, False, False
+    convert_mod = ""
 
-    for Index in range(len(txtfile)):
-        line = txtfile[Index]
-        nextLine = True
+    for Index in range(len(textfile)):
+        line = textfile[Index]
+        nextline = True
 
         if line == "\n":
-            nextLine = False
+            nextline = False
         elif "//" in line:
             line = line.replace("//", "#")
-            nextLine = False
-        elif convFlag:
-            if convMod == "CASE":
+            nextline = False
+        elif convert_flag:
+            if convert_mod == "CASE":
                 if "ENDCASE" in line:
-                    caseFlag = False
-                    caselist.append(line)
-                    line, inden, nextLine = direct_deletion_config()
+                    case_flag = False
+                    case_list.append(line)
+                    line, indent, nextline = direct_deletion_config()
 
-                if caseFlag:
-                    caselist.append(line)
-                    line, inden, nextLine = direct_deletion_config()
+                if case_flag:
+                    case_list.append(line)
+                    line, indent, nextline = direct_deletion_config()
                 else:
-                    convcaselist = pseudo_case(caselist)
-                    convFileList.extend(convcaselist)
-                    convFlag = False
-                    convMod = ""
+                    converted_case_list = pseudo_case(case_list)
+                    converted_file_list.extend(converted_case_list)
+                    convert_flag = False
+                    convert_mod = ""
 
-            elif convMod == "REPEAT":
+            elif convert_mod == "REPEAT":
                 if "UNTIL" in line:
-                    repeatFlag = False
-                    repeatlist.append(line)
-                    line, inden, nextLine = direct_deletion_config()
+                    repeat_flag = False
+                    repeat_list.append(line)
+                    line, indent, nextline = direct_deletion_config()
 
-                if repeatFlag:
-                    repeatlist.append(line)
-                    line, inden, nextLine = direct_deletion_config()
+                if repeat_flag:
+                    repeat_list.append(line)
+                    line, indent, nextline = direct_deletion_config()
                 else:
-                    convrepeatlist = pseudo_repeat(repeatlist)
-                    convFileList.extend(convrepeatlist)
-                    convFlag = False
-                    convMod = ""
+                    converted_repeat_list = pseudo_repeat(repeat_list)
+                    converted_file_list.extend(converted_repeat_list)
+                    convert_flag = False
+                    convert_mod = ""
         else:
 
-            if "CASE" in line and not "ENDCASE" in line:
-                convFlag = True
-                caseFlag = True
-                convMod = "CASE"
-                caselist = []
-                caselist.append(line)
-                line, inden, nextLine = direct_deletion_config()
+            if "CASE" in line and not ("ENDCASE" in line):
+                convert_flag = True
+                case_flag = True
+                convert_mod = "CASE"
+                case_list = [line]
+                line, indent, nextline = direct_deletion_config()
             elif "REPEAT" in line:
-                convFlag = True
-                repeatFlag = True
-                convMod = "REPEAT"
-                repeatlist = []
-                repeatlist.append(line)
-                line, inden, nextLine = direct_deletion_config()
+                convert_flag = True
+                repeat_flag = True
+                convert_mod = "REPEAT"
+                repeat_list = [line]
+                line, indent, nextline = direct_deletion_config()
             else:
-                inden = indentation_count(line)
+                indent = indentation_count(line)
                 line = line.strip()
-                line, inden, nextLine = direct_deletion(line, inden, nextLine)
-                line = line_delection(line)
+                line, indent, nextline = direct_deletion(line, indent, nextline)
+                line = line_del(line)
                 line = line_conversion(line)
 
             line = pseudo_replace(line)
             # indentation addition
-            line = INDENTATION * inden + line
+            line = INDENTATION * indent + line
 
-        if not convFlag:
-            convFileList.append(line)
+        if not convert_flag:
+            converted_file_list.append(line)
 
-        if nextLine == True:
-            convFileList.append("\n")
+        if nextline:
+            converted_file_list.append("\n")
 
-    return convFileList
+    return converted_file_list
 
 
 def line_conversion(line):
@@ -121,7 +119,7 @@ def line_conversion(line):
         line = pseudo_closefile(line)
     elif "FOR" in line:
         line = pseudo_for(line)
-    elif "IF" in line and not "ENDIF" in line:
+    elif "IF" in line and not ("ENDIF" in line):
         line = pseudo_if(line)
     elif "CALL" in line:
         line = pseudo_call(line)
@@ -136,34 +134,34 @@ def indentation_count(line):
     blanks = 0
     while line[blanks] == " ":
         blanks = blanks + 4
-    inden = int(blanks / 4)
-    return inden
+    indent = int(blanks / 4)
+    return indent
 
 
-def direct_deletion(line, inden, nextLine):
+def direct_deletion(line, indent, nextline):
     if "NEXT" in line:
-        line, inden, nextLine = direct_deletion_config()
+        line, indent, nextline = direct_deletion_config()
     elif "THEN" in line:
-        line, inden, nextLine = direct_deletion_config()
+        line, indent, nextline = direct_deletion_config()
     elif "ENDIF" in line:
-        line, inden, nextLine = direct_deletion_config()
+        line, indent, nextline = direct_deletion_config()
     elif "ENDWHILE" in line:
-        line, inden, nextLine = direct_deletion_config()
+        line, indent, nextline = direct_deletion_config()
     elif "ENDPROCEDURE" in line:
-        line, inden, nextLine = direct_deletion_config()
+        line, indent, nextline = direct_deletion_config()
     elif "ENDFUNCTION" in line:
-        line, inden, nextLine = direct_deletion_config()
-    return line, inden, nextLine
+        line, indent, nextline = direct_deletion_config()
+    return line, indent, nextline
 
 
 def direct_deletion_config():
     line = ""
-    inden = 0
-    nextLine = False
-    return line, inden, nextLine
+    indent = 0
+    nextline = False
+    return line, indent, nextline
 
 
-def line_delection(line):
+def line_del(line):
     if "  ELSE" in line:
         line = line.replace("  ELSE", "else:")
     elif "LENGTH" in line:
@@ -171,7 +169,7 @@ def line_delection(line):
     elif "WHILE" in line:
         line = line.replace("WHILE", "while")
         line = line + ":"
-    elif "RETURN" in line and not "RETURNS" in line:
+    elif "RETURN" in line and not ("RETURNS" in line):
         line = line.replace("RETURN", "return")
     return line
 
@@ -189,345 +187,344 @@ def pseudo_replace(line):
 
 
 def pseudo_lcase(line):
-    varName = ""
-    varName = varName.join(re.findall(r"LCASE\((.*?)\)", line))
-    varName = varName.strip()
-    thisLine = "{}.lower".format(varName)
-    return thisLine
+    variable_name = ""
+    variable_name = variable_name.join(re.findall(r"LCASE\((.*?)\)", line))
+    variable_name = variable_name.strip()
+    this_line = "{}.lower".format(variable_name)
+    return this_line
 
 
 def pseudo_ucase(line):
-    varName = ""
-    varName = varName.join(re.findall(r"UCASE\((.*?)\)", line))
-    varName = varName.strip()
-    thisLine = "{}.upper".format(varName)
-    return thisLine
+    variable_name = ""
+    variable_name = variable_name.join(re.findall(r"UCASE\((.*?)\)", line))
+    variable_name = variable_name.strip()
+    this_line = "{}.upper".format(variable_name)
+    return this_line
 
 
 def pseudo_right(line):
-    varNameList = re.findall(r"RIGHT\((.*?),", line)
-    varNumList = re.findall("\d+", line)
+    variable_nameList = re.findall(r"RIGHT\((.*?),", line)
+    varNumList = re.findall("\\d+", line)
     integer = varNumList[-1]
-    varName = ""
-    varName = varName.join(varNameList)
-    varName = varName.strip()
-    thisLine = "{}[0:{}]".format(varName, integer)
-    return thisLine
+    variable_name = ""
+    variable_name = variable_name.join(variable_nameList)
+    variable_name = variable_name.strip()
+    this_line = "{}[0:{}]".format(variable_name, integer)
+    return this_line
 
 
 def pseudo_mid(line):
-    varNameList = re.findall(r"\((.*?),", line)
-    varNumList = re.findall("\d+", line)
+    variable_nameList = re.findall(r"\((.*?),", line)
+    varNumList = re.findall("\\d+", line)
     startVal = varNumList[-2]
     lenVal = varNumList[-1]
     startVal = str(eval(startVal) - 1)
     lenVal = str(eval(lenVal) + 1)
-    varName = ""
-    varName = varName.join(varNameList)
-    varName = varName.strip()
-    thisLine = "{}[{}:{}]".format(varName, startVal, lenVal)
-    return thisLine
+    variable_name = ""
+    variable_name = variable_name.join(variable_nameList)
+    variable_name = variable_name.strip()
+    this_line = "{}[{}:{}]".format(variable_name, startVal, lenVal)
+    return this_line
 
 
 def pseudo_output(line):
-    thisLine = line
-    varName = ""
-    varName = varName.join(re.findall(r"OUTPUT(.*?)\Z", line))
-    varName = varName.strip()
-    varName = varName.replace("&", "+")
-    thisLine = "print({})".format(varName)
-    return thisLine
+    variable_name = ""
+    variable_name = variable_name.join(re.findall(r"OUTPUT(.*?)\Z", line))
+    variable_name = variable_name.strip()
+    variable_name = variable_name.replace("&", "+")
+    this_line = "print({})".format(variable_name)
+    return this_line
 
 
 def pseudo_declare(line):
-    thisLine = line
     if "ARRAY" in line:
-        varName = ""
-        varName = varName.join(re.findall(r"DECLARE(.*?):", line))
-        varName = varName.strip()
-        thisLine = varName + " = []"
+        variable_name = ""
+        variable_name = variable_name.join(re.findall(r"DECLARE(.*?):", line))
+        variable_name = variable_name.strip()
+        this_line = variable_name + " = []"
     else:
-        thisLine = line.replace("DECLARE", "# DECLARE")
-    return thisLine
+        this_line = line.replace("DECLARE", "# DECLARE")
+    return this_line
 
 
 def pseudo_for(line):
-    varName = ""
-    varName = varName.join(re.findall(r"FOR(.*?)←", line))
-    varName = varName.strip()
-    varRangeList = re.findall("\d+", line)
+    variable_name = ""
+    variable_name = variable_name.join(re.findall(r"FOR(.*?)←", line))
+    variable_name = variable_name.strip()
+    varRangeList = re.findall("\\d+", line)
     iniVal = varRangeList[-2]
     endVal = varRangeList[-1]
-    thisLine = "for {} in range({},{}):".format(varName, iniVal, endVal)
-    return thisLine
+    this_line = "for {} in range({},{}):".format(variable_name, iniVal, endVal)
+    return this_line
 
 
 def pseudo_if(line):
+    variable_nameList = []
+    varValueList = []
+    symbol = ""
     if ">=" in line:
-        varNameList = re.findall(r"IF(.*?)>=", line)
+        variable_nameList = re.findall(r"IF(.*?)>=", line)
         varValueList = re.findall(r">=(.*?)\Z", line)
         symbol = ">="
     elif "<=" in line:
-        varNameList = re.findall(r"IF(.*?)<=", line)
+        variable_nameList = re.findall(r"IF(.*?)<=", line)
         varValueList = re.findall(r"<=(.*?)\Z", line)
         symbol = "<="
     elif "<>" in line:
-        varNameList = re.findall(r"IF(.*?)<>", line)
+        variable_nameList = re.findall(r"IF(.*?)<>", line)
         varValueList = re.findall(r"<>(.*?)\Z", line)
         symbol = "!="
     else:
         if "=" in line:
-            varNameList = re.findall(r"IF(.*?)=", line)
+            variable_nameList = re.findall(r"IF(.*?)=", line)
             varValueList = re.findall(r"=(.*?)\Z", line)
             symbol = "=="
         elif ">" in line:
-            varNameList = re.findall(r"IF(.*?)>", line)
+            variable_nameList = re.findall(r"IF(.*?)>", line)
             varValueList = re.findall(r">(.*?)\Z", line)
             symbol = ">"
         elif "<" in line:
-            varNameList = re.findall(r"IF(.*?)<", line)
+            variable_nameList = re.findall(r"IF(.*?)<", line)
             varValueList = re.findall(r"<(.*?)\Z", line)
             symbol = "<"
         else:
             print("Error: {}".format(line))
-    varName = ""
-    varName = varName.join(varNameList)
-    varName = varName.strip()
+    variable_name = ""
+    variable_name = variable_name.join(variable_nameList)
+    variable_name = variable_name.strip()
     varValue = ""
     varValue = varValue.join(varValueList)
     varValue = varValue.strip()
-    thisLine = "if {} {} {}:".format(varName, symbol, varValue)
-    return thisLine
+    this_line = "if {} {} {}:".format(variable_name, symbol, varValue)
+    return this_line
 
 
-def pseudo_case(caselist):
+def pseudo_case(case_list):
+    identifier = ""
     global INDENTATION
-    convcaselist = []
-    forcount = 0
-    inden = indentation_count(caselist[0])
-    for caseline in caselist:
-        caseline = caseline.strip()
-        if "CASE" in caseline and not "ENDCASE" in caseline:
-            identifer = pseudo_case_header(caseline)           
-        elif "OTHERWISE" in caseline:
-            statement = pseudo_case_statement(caseline)
+    convert_case_list = []
+    count = 0
+    indent = indentation_count(case_list[0])
+    for case_line in case_list:
+        case_line = case_line.strip()
+        if "CASE" in case_line and not ("ENDCASE" in case_line):
+            identifier = pseudo_case_header(case_line)
+        elif "OTHERWISE" in case_line:
+            statement = pseudo_case_statement(case_line)
             statement = line_conversion(statement)
             statement = pseudo_replace(statement)
-            convcaselist.append(inden*INDENTATION + "else:")
-            convcaselist.append("\n")
-            statement = (inden+1)*INDENTATION + statement
-            convcaselist.append(statement)
-            convcaselist.append("\n")
-        elif ":" in caseline and not "OTHERWISE" in caseline:
-            statement = pseudo_case_statement(caseline)
+            convert_case_list.append(indent * INDENTATION + "else:")
+            convert_case_list.append("\n")
+            statement = (indent + 1) * INDENTATION + statement
+            convert_case_list.append(statement)
+            convert_case_list.append("\n")
+        elif ":" in case_line and not ("OTHERWISE" in case_line):
+            statement = pseudo_case_statement(case_line)
             statement = line_conversion(statement)
-            value = pesodo_case_value(caseline)
+            value = pseudo_case_value(case_line)
             statement = pseudo_replace(statement)
-            if forcount == 0:
-                convcaselist.append(inden*INDENTATION + "if {} == {}:".format(identifer, value))
-                forcount += 1
+            if count == 0:
+                convert_case_list.append(indent * INDENTATION + "if {} == {}:".format(identifier, value))
+                count += 1
             else:
-                convcaselist.append(inden*INDENTATION + "elif {} == {}:".format(identifer, value))
-            convcaselist.append("\n")
-            statement = (inden+1)*INDENTATION + statement
-            convcaselist.append(statement)
-            convcaselist.append("\n")
-        elif "ENDCASE" in caseline:
+                convert_case_list.append(indent * INDENTATION + "elif {} == {}:".format(identifier, value))
+            convert_case_list.append("\n")
+            statement = (indent + 1) * INDENTATION + statement
+            convert_case_list.append(statement)
+            convert_case_list.append("\n")
+        elif "ENDCASE" in case_line:
             continue
         else:
-            statement = line_conversion(caseline)
+            statement = line_conversion(case_line)
             statement = pseudo_replace(statement)
-            statement = (inden+1)*INDENTATION + statement
-            convcaselist.append(statement)
-            convcaselist.append("\n")
-    return convcaselist
+            statement = (indent + 1) * INDENTATION + statement
+            convert_case_list.append(statement)
+            convert_case_list.append("\n")
+    return convert_case_list
 
 
-def pseudo_case_header(caseline):
-    identifer = ""
-    identifer = identifer.join(re.findall(r"OF(.*?)\Z", caseline))
-    identifer = identifer.strip()
-    return identifer
+def pseudo_case_header(case_line):
+    identifier = ""
+    identifier = identifier.join(re.findall(r"OF(.*?)\Z", case_line))
+    identifier = identifier.strip()
+    return identifier
 
 
-def pseudo_case_statement(caseline):
+def pseudo_case_statement(case_line):
     statement = ""
-    statement = statement.join(re.findall(r":(.*?)\Z", caseline))
+    statement = statement.join(re.findall(r":(.*?)\Z", case_line))
     statement = statement.strip()
     return statement
 
 
-def pesodo_case_value(caseline):
+def pseudo_case_value(case_line):
     value = ""
-    value = value.join(re.findall(r"\A(.*?):", caseline))
+    value = value.join(re.findall(r"\A(.*?):", case_line))
     value = value.strip()
     return value
 
 
-def pseudo_repeat(repeatlist):
+def pseudo_repeat(repeat_list):
     global INDENTATION
-    convrepeatlist, iterativepart = [], []
-    inden = indentation_count(repeatlist[0])
-    for repeatline in repeatlist:
-        repeatline = repeatline.strip()
-        if "REPEAT" in repeatline:
+    converted_repeat_list, iterative_part = [], []
+    indent = indentation_count(repeat_list[0])
+    for repeat_line in repeat_list:
+        repeat_line = repeat_line.strip()
+        if "REPEAT" in repeat_line:
             continue
-        elif "UNTIL" in repeatline:
-            convrepeatlist.extend(iterativepart)
-            condition = pseudo_repeat_condition(repeatline)
+        elif "UNTIL" in repeat_line:
+            converted_repeat_list.extend(iterative_part)
+            condition = pseudo_repeat_condition(repeat_line)
             condition = line_conversion(condition)
             condition = pseudo_replace(condition)
-            convrepeatlist.append(inden*INDENTATION + "while {}:".format(condition))
-            convrepeatlist.append("\n")
-            for elements in iterativepart:
-                elements = (inden+1)*INDENTATION + elements
-                convrepeatlist.append(elements)
+            converted_repeat_list.append(indent * INDENTATION + "while {}:".format(condition))
+            converted_repeat_list.append("\n")
+            for elements in iterative_part:
+                elements = (indent + 1) * INDENTATION + elements
+                converted_repeat_list.append(elements)
         else:
-            statement = line_conversion(repeatline)
+            statement = line_conversion(repeat_line)
             statement = pseudo_replace(statement)
-            statement = inden*INDENTATION + statement
-            iterativepart.append(statement)
-            iterativepart.append("\n")
-    return convrepeatlist
+            statement = indent * INDENTATION + statement
+            iterative_part.append(statement)
+            iterative_part.append("\n")
+    return converted_repeat_list
 
 
-def pseudo_repeat_condition(repeatline):
+def pseudo_repeat_condition(repeat_line):
     condition = ""
-    condition = condition.join(re.findall(r"UNTIL(.*?)\Z", repeatline))
+    condition = condition.join(re.findall(r"UNTIL(.*?)\Z", repeat_line))
     condition = condition.strip()
     return condition
 
+
 def pseudo_openfile(line):
+    open_mod = ""
     if "READ" in line:
-        openMod = "r"
+        open_mod = "r"
     elif "WRITE" in line:
-        openMod = "w"
+        open_mod = "w"
     elif "APPEND" in line:
-        openMod = "a"
-    varName = ""
-    varName = varName.join(re.findall(r"OPENFILE(.*?)FOR", line))
-    varName = varName.strip()
-    fileName = varName[1:]
+        open_mod = "a"
+    variable_name = ""
+    variable_name = variable_name.join(re.findall(r"OPENFILE(.*?)FOR", line))
+    variable_name = variable_name.strip()
+    fileName = variable_name[1:]
     fileName = fileName[:-5]
-    thisLine = "{} = open({},'{}')".format(fileName, varName, openMod)
-    return thisLine
+    this_line = "{} = open({},'{}')".format(fileName, variable_name, open_mod)
+    return this_line
 
 
 def pseudo_readfile(line):
-    varFile = ""
-    varFile = varFile.join(re.findall(r"READFILE(.*?),", line))
-    varFile = varFile.strip()
-    varName = ""
-    varName = varName.join(re.findall(r",(.*?)\Z", line))
-    varName = varName.strip()
-    fileName = varFile[1:]
+    variable_file = ""
+    variable_file = variable_file.join(re.findall(r"READFILE(.*?),", line))
+    variable_file = variable_file.strip()
+    variable_name = ""
+    variable_name = variable_name.join(re.findall(r",(.*?)\Z", line))
+    variable_name = variable_name.strip()
+    fileName = variable_file[1:]
     fileName = fileName[:-5]
-    thisLine = "{} = {}.readline()".format(varName, fileName)
-    return thisLine
+    this_line = "{} = {}.readline()".format(variable_name, fileName)
+    return this_line
 
 
 def pseudo_call(line):
-    thisLine = line
     if ("(" or ")") in line:
-        varName = ""
-        varName = varName.join(re.findall(r"\((.*?)\)", line))
-        varName = varName.strip()
-        funName = ""
-        funName = funName.join(re.findall(r"CALL(.*?)\(", line))
-        funName = funName.strip()
-        thisLine = "{}({})".format(funName, varName)
+        variable_name = ""
+        variable_name = variable_name.join(re.findall(r"\((.*?)\)", line))
+        variable_name = variable_name.strip()
+        function_name = ""
+        function_name = function_name.join(re.findall(r"CALL(.*?)\(", line))
+        function_name = function_name.strip()
+        this_line = "{}({})".format(function_name, variable_name)
     else:
-        funName = ""
-        funName = funName.join(re.findall(r"CALL(.*?)\Z", line))
-        funName = funName.strip()
-        thisLine = funName + "()"
-    return thisLine
+        function_name = ""
+        function_name = function_name.join(re.findall(r"CALL(.*?)\Z", line))
+        function_name = function_name.strip()
+        this_line = function_name + "()"
+    return this_line
 
 
 def pseudo_procedure(line):
-    thisLine = line
-    paraNum = line.count(":")
-    if paraNum == 1:
-        varName = ""
-        varName = varName.join(re.findall(r"\((.*?):", line))
-        varName = varName.strip()
-        funName = ""
-        funName = funName.join(re.findall(r"PROCEDURE(.*?)\(", line))
-        funName = funName.strip()
-        thisLine = "def {}({}):".format(funName, varName)
-    elif paraNum == 0:
-        funName = ""
-        funName = funName.join(re.findall(r"PROCEDURE(.*?)\Z", line))
-        funName = funName.strip()
-        thisLine = "def {}():".format(funName)
-    elif paraNum > 1:
-        funName = ""
-        funName = funName.join(re.findall(r"PROCEDURE(.*?)\(", line))
-        funName = funName.strip()
-        thisLine = "def {}()".format(funName)
-        varName = ""
-        varName = varName.join(re.findall(r"\((.*?):", line))
-        varName = varName.strip()
-        paraName = ""
-        paraName = ",".join(re.findall(r",(.*?):", line))
-        paraName = paraName.strip()
-        parameter = varName + "," + paraName
+    this_line = line
+    parameter_number = line.count(":")
+    if parameter_number == 1:
+        variable_name = ""
+        variable_name = variable_name.join(re.findall(r"\((.*?):", line))
+        variable_name = variable_name.strip()
+        function_name = ""
+        function_name = function_name.join(re.findall(r"PROCEDURE(.*?)\(", line))
+        function_name = function_name.strip()
+        this_line = "def {}({}):".format(function_name, variable_name)
+    elif parameter_number == 0:
+        function_name = ""
+        function_name = function_name.join(re.findall(r"PROCEDURE(.*?)\Z", line))
+        function_name = function_name.strip()
+        this_line = "def {}():".format(function_name)
+    elif parameter_number > 1:
+        function_name = ""
+        function_name = function_name.join(re.findall(r"PROCEDURE(.*?)\(", line))
+        function_name = function_name.strip()
+        variable_name = ""
+        variable_name = variable_name.join(re.findall(r"\((.*?):", line))
+        variable_name = variable_name.strip()
+        parameter_name = ",".join(re.findall(r",(.*?):", line))
+        parameter_name = parameter_name.strip()
+        parameter = variable_name + "," + parameter_name
         parameter = parameter.replace(" ", "")
-        thisLine = "def {}({}):".format(funName, parameter)
-    return thisLine
+        this_line = "def {}({}):".format(function_name, parameter)
+    return this_line
 
 
 def pseudo_function(line):
-    thisLine = line
-    paraNum = line.count(":")
-    if paraNum == 1:
-        varName = ""
-        varName = varName.join(re.findall(r"\((.*?):", line))
-        varName = varName.strip()
-        funName = ""
-        funName = funName.join(re.findall(r"FUNCTION(.*?)\(", line))
-        funName = funName.strip()
-        thisLine = "def {}({}):".format(funName, varName)
-    elif paraNum == 0:
-        funName = ""
-        funName = funName.join(re.findall(r"FUNCTION(.*?)RETURNS", line))
-        funName = funName.strip()
-        thisLine = "def {}():".format(funName)
-    elif paraNum > 1:
-        funName = ""
-        funName = funName.join(re.findall(r"FUNCTION(.*?)\(", line))
-        funName = funName.strip()
-        thisLine = "def {}()".format(funName)
-        varName = ""
-        varName = varName.join(re.findall(r"\((.*?):", line))
-        varName = varName.strip()
-        paraName = ""
-        paraName = ",".join(re.findall(r",(.*?):", line))
-        paraName = paraName.strip()
-        parameter = varName + "," + paraName
+    this_line = line
+    parameter_number = line.count(":")
+    if parameter_number == 1:
+        variable_name = ""
+        variable_name = variable_name.join(re.findall(r"\((.*?):", line))
+        variable_name = variable_name.strip()
+        function_name = ""
+        function_name = function_name.join(re.findall(r"FUNCTION(.*?)\(", line))
+        function_name = function_name.strip()
+        this_line = "def {}({}):".format(function_name, variable_name)
+    elif parameter_number == 0:
+        function_name = ""
+        function_name = function_name.join(re.findall(r"FUNCTION(.*?)RETURNS", line))
+        function_name = function_name.strip()
+        this_line = "def {}():".format(function_name)
+    elif parameter_number > 1:
+        function_name = ""
+        function_name = function_name.join(re.findall(r"FUNCTION(.*?)\(", line))
+        function_name = function_name.strip()
+        variable_name = ""
+        variable_name = variable_name.join(re.findall(r"\((.*?):", line))
+        variable_name = variable_name.strip()
+        parameter_name = ",".join(re.findall(r",(.*?):", line))
+        parameter_name = parameter_name.strip()
+        parameter = variable_name + "," + parameter_name
         parameter = parameter.replace(" ", "")
-        thisLine = "def {}({}):".format(funName, parameter)
-    return thisLine
+        this_line = "def {}({}):".format(function_name, parameter)
+    return this_line
 
 
 def pseudo_writefile(line):
-    varFile = ""
-    varFile = varFile.join(re.findall(r"WRITEFILE(.*?),", line))
-    varFile = varFile.strip()
-    varName = ""
-    varName = varName.join(re.findall(r",(.*?)\Z", line))
-    varName = varName.strip()
-    fileName = varFile[1:]
+    variable_file = ""
+    variable_file = variable_file.join(re.findall(r"WRITEFILE(.*?),", line))
+    variable_file = variable_file.strip()
+    variable_name = ""
+    variable_name = variable_name.join(re.findall(r",(.*?)\Z", line))
+    variable_name = variable_name.strip()
+    fileName = variable_file[1:]
     fileName = fileName[:-5]
-    thisLine = "{}.write({})".format(fileName, varName)
-    return thisLine
+    this_line = "{}.write({})".format(fileName, variable_name)
+    return this_line
 
 
 def pseudo_closefile(line):
-    varFile = ""
-    varFile = varFile.join(re.findall(r"CLOSEFILE(.*?)\Z", line))
-    varFile = varFile.strip()
-    fileName = varFile[1:]
+    variable_file = ""
+    variable_file = variable_file.join(re.findall(r"CLOSEFILE(.*?)\Z", line))
+    variable_file = variable_file.strip()
+    fileName = variable_file[1:]
     fileName = fileName[:-5]
-    thisLine = "{}.close()".format(fileName)
-    return thisLine
+    this_line = "{}.close()".format(fileName)
+    return this_line

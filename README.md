@@ -14,11 +14,11 @@ You may still obtain output files when operating the program without encounterin
 
 * pseudocode to be converted should not have **any keywords** in variable names.
 
-* Mutiline command without pre-definition is not accepted.
+* Multiline command without pre-definition is not accepted.
 
 * Unexpected brackets ``()`` may lead to serious errors.
 
-* Unexpectded blanks preceded, or implemented in commands eg. ``LENGTH (ThisString)`` will not be accepted, as if it is grammartically correct.
+* Unexpected blanks preceded, or implemented in commands e.g. ``LENGTH (ThisString)`` will not be accepted, as if it is grammatically correct.
 
 * This program is **not** capable of handling pseudocode with :
 
@@ -36,7 +36,7 @@ You may still obtain output files when operating the program without encounterin
 
 * Command words implemented should be in **UPPER** case.
 
-* Variable identifers are recommended to be in **CamelCaps** while under-scores are also acceptable.
+* Variable identifiers are recommended to be in **CamelCaps** while under-scores are also acceptable.
 
 * **Indentations** should be made where necessary and appropriate.
 
@@ -48,7 +48,7 @@ You may still obtain output files when operating the program without encounterin
 
 * The converted file follows original identifiers.
 
-* Variable declaration will be converted into comments since it does not exists in python.
+* Variable declaration will be converted into comments since it does not exist in python.
 
 * Constants will be regarded as variables even if it may not be altered.
 
@@ -81,19 +81,19 @@ DECLARE <identifer> : ARRAY[<lower1>:<upper1>,<lower2>:<upper2>] OF <data type>
 
 * Symbols and operations :
 
-symbol | operation  
-:-------:|----------
-\+     | Addition
-\-     | Subtraction
-\*     | Multiplication
-/      | Division
-\>     | Greater than
-<      | Less than
-\>=    | Greater than or equal to
-<=     | Less than or equal to
-=      | Equal to
-<>     | Not equal to
-&      | Concatenate two strings
+| symbol | operation                |
+|:------:|--------------------------|
+|   \+   | Addition                 |
+|   \-   | Subtraction              |
+|   \*   | Multiplication           |
+|   /    | Division                 |
+|   \>   | Greater than             |
+|   <    | Less than                |
+|  \>=   | Greater than or equal to |
+|   <=   | Less than or equal to    |
+|   =    | Equal to                 |
+|   <>   | Not equal to             |
+|   &    | Concatenate two strings  |
 
 * Commands :
 
@@ -143,7 +143,7 @@ Noted that ``THEN`` only has two spaces of indentation, while the statement has 
 
 And ``ELSE`` lines up with ``THEN`` . Wrong format may lead to serious errors. 
 
-Do check the enclose for ``CASE`` statement since it is crucial for convertion.
+Do check the "ENDCASE" for ``CASE`` statement since it is crucial for conversion.
 
 ```
 IF <condition>

@@ -10,8 +10,8 @@ DECLARE
 #DECLARE
 
 
-<identifer>[index]
-<identifer>[index]
+<identifier>[index]
+<identifier>[index]
 
 
 <>
@@ -76,7 +76,7 @@ else:
     <statement(s)>
 
 
-CASE OF <identifer>
+CASE OF <identifier>
     <value1> : <statement1>
                <statement2>
     <value2> : <statement1>
@@ -85,10 +85,10 @@ CASE OF <identifer>
                <statement2>
 ENDCASE
 
-if <identifer> = <value1>:
+if <identifier> = <value1>:
     <statement1>
     <statement2>
-elif:<identifer> = <value2>:
+elif:<identifier> = <value2>:
     <statement1>
     <statement2>
 else:
@@ -96,11 +96,11 @@ else:
     <statement2>
 
 
-FOR <indentifer> ← <value1> TO <value2>
+FOR <identifier> ← <value1> TO <value2>
     <statements>
-NEXT <identifer>
+NEXT <identifier>
 
-for <indentifer> in range(<value1>,<value2>)
+for <identifier> in range(<value1>,<value2>)
     <statements>
 
 
@@ -121,44 +121,44 @@ while <condition>:
     <statement(s)>
 
 
-PROCEDURE <identifer>
+PROCEDURE <identifier>
     <statement(s)>
 ENDPROCEDURE
 
-def <identifer>():
+def <identifier>():
     <statement(s)>
 
 
-PROCEDURE <identifer>(<para1>:<datatype>, <para2>:<datatype>)
+PROCEDURE <identifier>(<para1>:<datatype>, <para2>:<datatype>)
     <statement(s)>
 ENDPROCEDURE
 
-def <identifer>(<para1>,<para2>):
+def <identifier>(<para1>,<para2>):
     <statement(s)>
 
 
-CALL <identifer>
-<identifer>()
+CALL <identifier>
+<identifier>()
 
 
-CALL <identifer>(Value1, Value2)
-<identifer>(Value1, Value2)
+CALL <identifier>(Value1, Value2)
+<identifier>(Value1, Value2)
 
 
-FUNCTION <identifer> RETURNS <data type>
+FUNCTION <identifier> RETURNS <data type>
     <statement(s)>
 ENDFUNCTION
 
-def <identifer>():
+def <identifier>():
     <statement(s)>
     return <variable>
 
 
-FUNCTION <identifer>(<para1>:<datatype>, <para2>:<datatype>) RETURNS <data type>
+FUNCTION <identifier>(<para1>:<datatype>, <para2>:<datatype>) RETURNS <data type>
     <statement(s)>
 ENDFUNCTION
            
-def <identifer>(<para1>,<para2>):
+def <identifier>(<para1>,<para2>):
     <statement(s)>
     return <variable>
 
@@ -167,7 +167,7 @@ PROCEDURE <identifier>(BYREF <para1>:<datatype>, <para2>:<datatype>)
     <statement(s)>
 ENDPROCEDURE
 
-def <identifer>(<para1>,<para2>):
+def <identifier>(<para1>,<para2>):
     global <para1>
     <statement(s)>
 
