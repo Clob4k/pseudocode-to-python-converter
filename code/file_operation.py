@@ -3,8 +3,8 @@ file_operation.py
 coding:utf-8
 
 Developed by @Luke.Tang 2022
-This program is for converting the pesudocode to the Python code.
-For more information, please visit github.com/Clob4k/pesudocode-to-python-converter
+This program is for converting the pseudocode to the Python code.
+For more information, please visit github.com/Clob4k/pseudocode-to-python-converter
 """
 
 import os
@@ -57,7 +57,7 @@ def out_put_file(convFileList):
     DelBlankLines, DelComments = file_config()
     # fetch the operating path
     currentWorkPath = os.path.dirname(__file__)
-    genFilePath = currentWorkPath + "/convertedFile.txt"
+    genFilePath = currentWorkPath + "/converted_file.txt"
     genTxtFile = open(genFilePath, "w", encoding="utf-8")
     for line in convFileList:
         if DelBlankLines == True:
