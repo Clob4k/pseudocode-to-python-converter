@@ -1,28 +1,28 @@
-# Pesudocode-to-python-converter
+# pseudocode-to-python-converter
 
 * Individual project by _Luke.Tang_
 
 * Started on _Jan 16th 2022_
 
-* The program is designed to convert pesudocode in text file into python code.
+* The program is designed to convert pseudocode in text file into python code.
 
 * Develop environment: _python 3.10.2_
 
 # Limitations
 
-You may still obtain output files when operating the program in following situations without errors. However, there is no guarantee to generate accurate python format files.
+You may still obtain output files when operating the program without encountering any errors in following situations. However, there is no guarantee to generate accurate python format files.
 
-* Pesudocode to be converted should not have **any keywords** in variable names.
+* pseudocode to be converted should not have **any keywords** in variable names.
 
 * Mutiline command without pre-definition is not accepted.
 
 * Unexpected brackets ``()`` may lead to serious errors.
 
-* Additional blanks preceded, or implemented in commands eg. ``LENGTH (ThisString)`` will not be accepted, since it is considered as wrong syntax.
+* Unexpectded blanks preceded, or implemented in commands eg. ``LENGTH (ThisString)`` will not be accepted, as if it is grammartically correct.
 
-* This program is **not** capable of handling pesudocode with :
+* This program is **not** capable of handling pseudocode with :
 
-1. command words that are not mentioned in **Accepted pesudocode format** section.
+1. any command words that are not mentioned in **Accepted pseudocode format** section.
 
 2. logical operations ``AND, OR, NOT`` within ``IF, WHILE, CASE, REPEAT UNTIL`` operation.
 
@@ -30,9 +30,9 @@ You may still obtain output files when operating the program in following situat
 
 4. **user-defined data types**
 
-# Accepted pesudocode format
+# Accepted pseudocode format
 
-* All Syntax follow the Cambridge International AS & A Level Computer Science 9618 - Pesudocode Guide for Teachers.
+* All Syntax follow the Cambridge International AS & A Level Computer Science 9618 - pseudocode Guide for Teachers.
 
 * Command words implemented should be in **UPPER** case.
 
@@ -55,8 +55,6 @@ You may still obtain output files when operating the program in following situat
 ## Assignment
 
 * Pay attention that symbol for assignment is ``←`` instead of ``<-`` .
-
-* You may use _ALT + 43081_ on the keybord to enter left-arrow symbol.
 
 ```
 <variableA> ← <variableB> 

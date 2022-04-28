@@ -1,0 +1,57 @@
+// Examplepseudocode.txt
+// D:\OneDrive\Code\GithubProjects\pseudocode-to-python-converter\Examplepseudocode.txt
+
+DECLARE NoTelNumber : INTEGER
+DECLARE Index : INTEGER
+DECLARE ThisName : STRING
+DECLARE StudentData : STRING
+
+NoTelNum ← 0
+
+FOR Index ← 1 to 40
+    ThisName ← ClassList[Index]
+    IF ThisName <> ""
+      THEN
+        StudentData ← SearchFile(ThisName)
+        IF StudentData = ""
+          THEN
+            StudentData ← ThisName & "No number"
+            NoTelNumber ← NoTelNumber + 1
+        ENDIF
+    ENDIF
+NEXT
+
+PROCEDURE Procedure
+    REPEAT
+        Index = Index + 1
+    UNTIL Index > 40
+ENDPROCEDURE
+
+PROCEDURE Precedure(NoTelNumber : INTEGER)
+    CASE OF Score
+        "90" : OUTPUT "A"
+            OUTPUT "Good job"
+        "80" : StudentData ← ThisName & "No number"
+        OTHERWISE: OUTPUT "C"
+    ENDCASE
+ENDPROCEDURE
+
+PROCEDURE Precedure(NoTelNumber : INTEGER, Index : INTEGER, ThisName : STRING)
+ENDPROCEDURE
+
+FUNCTION Function RETURNS INTEGER
+    RETURN NoTelNumber
+ENDFUNCTION
+
+FUNCTION Function(NoTelNumber : INTEGER) RETURNS INTEGER
+    RETURN NoTelNumber
+ENDFUNCTION
+
+FUNCTION Function(NoTelNumber : INTEGER, Index : INTEGER, ThisName : STRING) RETURNS INTEGER
+    RETURN NoTelNumber
+ENDFUNCTION
+
+CALL Procedure
+CALL Function(NoTelNumber, ThisName)
+
+OPENFILE "example.txt" FOR READ
