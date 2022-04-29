@@ -64,17 +64,17 @@ You may still obtain output files when operating the program without encounterin
 
 * one-dimensional : 
 ```
-DECLARE <identifer> : ARRAY[<lower>,<upper>] OF <data type>
+DECLARE <identifier> : ARRAY[<lower>,<upper>] OF <data type>
 ```
 
 * two-dimensional : 
 ```
-DECLARE <identifer> : ARRAY[<lower1>:<upper1>,<lower2>:<upper2>] OF <data type>
+DECLARE <identifier> : ARRAY[<lower1>:<upper1>,<lower2>:<upper2>] OF <data type>
 ```
 
 * fetch values :    
 ```
-<identifer>[index]
+<identifier>[index]
 ```
 
 ## Common operations
@@ -98,7 +98,7 @@ DECLARE <identifer> : ARRAY[<lower1>:<upper1>,<lower2>:<upper2>] OF <data type>
 * Commands :
 
 ```
-INPUT<identifer>
+INPUT<identifier>
 ```
 
 ```
@@ -162,7 +162,7 @@ ENDIF
 ```
 
 ```
-CASE OF <identifer>
+CASE OF <identifier>
     <value1> : <statement1>
                <statement2>
     <value2> : <statement1>
@@ -177,7 +177,7 @@ ENDCASE
 ```
 FOR <indentifer> ← <value1> TO <value2>
     <statements>
-NEXT <identifer>
+NEXT <identifier>
 ```
 
 ```
@@ -195,33 +195,33 @@ ENDWHILE
 ## Procedure and functions
 
 ```
-PROCEDURE <identifer>
+PROCEDURE <identifier>
     <statement(s)>
 ENDPROCEDURE
 ```
 
 ```
-PROCEDURE <identifer>(<para1>:<datatype>, <para2>:<datatype>)
+PROCEDURE <identifier>(<para1>:<datatype>, <para2>:<datatype>)
     <statement(s)>
 ENDPROCEDURE
 ```
 
 ```
-CALL <identifer>
+CALL <identifier>
 ```
 
 ```
-CALL <identifer>(Value1, Value2)
+CALL <identifier>(Value1, Value2)
 ```
 
 ```
-FUNCTION <identifer> RETURNS <data type>
+FUNCTION <identifier> RETURNS <data type>
     <statement(s)>
 ENDFUNCTION
 ```
 
 ```
-FUNCTION <identifer>(<para1>:<datatype>, <para2>:<datatype>) RETURNS <data type>
+FUNCTION <identifier>(<para1>:<datatype>, <para2>:<datatype>) RETURNS <data type>
     <statement(s)>
 ENDFUNCTION
 ```
