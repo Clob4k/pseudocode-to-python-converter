@@ -8,6 +8,9 @@ DECLARE StudentData : STRING
 
 NoTelNum ← 0
 
+IF Chris = "student" AND Luke <> "adult" AND Sherlock = "?"
+ENDIF
+
 FOR Index ← 1 to 40
     ThisName ← ClassList[Index]
     IF ThisName <> ""

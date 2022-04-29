@@ -120,7 +120,11 @@ def line_conversion(line):
     elif "FOR" in line:
         line = pseudo_for(line)
     elif "IF" in line and not ("ENDIF" in line):
-        line = pseudo_if(line)
+        if ("AND" in line) or ("OR" in line) or ("NOT" in line):
+            line = pseudo_bool_if(line)
+            line = pseudo_replace(line)
+        else:
+            line = pseudo_if(line)
     elif "CALL" in line:
         line = pseudo_call(line)
     elif "PROCEDURE" in line:
@@ -289,6 +293,7 @@ def pseudo_if(line):
             symbol = "<"
         else:
             print("Error: {}".format(line))
+            print("Unknown operator in if statement")
     variable_name = ""
     variable_name = variable_name.join(variable_nameList)
     variable_name = variable_name.strip()
@@ -297,6 +302,78 @@ def pseudo_if(line):
     varValue = varValue.strip()
     this_line = "if {} {} {}:".format(variable_name, symbol, varValue)
     return this_line
+    
+
+def pseudo_bool_if(line):
+    bool_location = find_bool_location(line)
+    bool_type = find_bool_type(line, bool_location)
+    right_side = ""
+    left_side = ""
+    if bool_type == "NOT":
+        line = line.replace("NOT", "not")
+    elif bool_type == "OR":
+        left_side = line[:bool_location]
+        right_side = line[:bool_location + 1]
+    elif bool_type == "AND":
+        left_side = line[:bool_location]
+        right_side = line[:bool_location + 2]
+
+    if ("AND" in right_side) or ("OR" in right_side):
+        right_side = find_bool_right(right_side)
+
+    if bool_type == "NOT":
+        line = pseudo_if(line)
+    elif bool_type == "OR":
+        line = pseudo_if(left_side) + "or" + right_side
+    elif bool_type == "AND":
+        line = pseudo_if(left_side) + "and" + right_side
+    return line
+
+
+def find_bool_location(line):
+    location_list = [line.find("AND"), line.find("OR"), line.find("NOT")]
+    location_list.sort()
+    for i in location_list:
+        if i != -1:
+            return i
+    return -1
+
+
+def find_bool_type(line, bool_location):
+    bool_char = ""
+    if bool_location == -1:
+        print("Error: {}".format(line))
+        print("Unknown bool operator")
+    else:
+        bool_char = line[bool_location]
+        if bool_char == "A":
+            bool_char = "and"
+        elif bool_char == "O":
+            bool_char = "or"
+        elif bool_char == "N":
+            bool_char = "not"
+        else:
+            print("Error: {}".format(line))
+            print("Unknown bool operator")
+    return bool_char
+
+
+def find_bool_right(line):
+    bool_location = find_bool_location(line)
+    bool_type = find_bool_type(line, bool_location)
+    if bool_type == "OR":
+        left_side = line[:bool_location]
+        right_side = line[:bool_location + 1]
+        if ("AND" in right_side) or ("OR" in right_side):
+            right_side = find_bool_right(right_side)
+        line = left_side + " or " + right_side
+    elif bool_type == "AND":
+        left_side = line[:bool_location]
+        right_side = line[:bool_location + 2]
+        if ("AND" in right_side) or ("OR" in right_side):
+            right_side = find_bool_right(right_side)
+        line = left_side + " and " + right_side
+    return line
 
 
 def pseudo_case(case_list):
