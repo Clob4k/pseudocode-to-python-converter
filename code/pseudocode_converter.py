@@ -7,7 +7,7 @@ This program is for converting the pseudocode to the Python code.
 For more information, please visit github.com/Clob4k/pseudocode-to-python-converter
 """
 
-import regex as re
+import re
 
 INDENTATION = "    "
 
@@ -312,10 +312,10 @@ def pseudo_bool_if(line):
     if bool_type == "NOT":
         line = line.replace("NOT", "not")
     elif bool_type == "OR":
-        left_side = line[:bool_location]
+        left_side = line[bool_location:]
         right_side = line[:bool_location + 1]
     elif bool_type == "AND":
-        left_side = line[:bool_location]
+        left_side = line[bool_location:]
         right_side = line[:bool_location + 2]
 
     if ("AND" in right_side) or ("OR" in right_side):
@@ -362,13 +362,13 @@ def find_bool_right(line):
     bool_location = find_bool_location(line)
     bool_type = find_bool_type(line, bool_location)
     if bool_type == "OR":
-        left_side = line[:bool_location]
+        left_side = line[bool_location:]
         right_side = line[:bool_location + 1]
         if ("AND" in right_side) or ("OR" in right_side):
             right_side = find_bool_right(right_side)
         line = left_side + " or " + right_side
     elif bool_type == "AND":
-        left_side = line[:bool_location]
+        left_side = line[bool_location:]
         right_side = line[:bool_location + 2]
         if ("AND" in right_side) or ("OR" in right_side):
             right_side = find_bool_right(right_side)
